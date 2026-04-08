@@ -2,14 +2,23 @@
 ## Úlohy
 ## Hlavné bloky:
 Clock divider – delenie hodinového signálu
+
 Debouncer – ošetrenie tlačidiel (sw)
+
 Control logic – riadenie výberu vlnového tvaru
+
 Integrátor (čítač/akumulátor) – generuje pílu / trojuholník
+
 Komparátor – s up_limit a down_limit, prepína smer integrácie
+
 LUT – tabuľka pre sínus (DDS princíp)
+
 Tune switch (MUX) – výber medzi obdĺžnikom, píla/trojuholník, sínus
+
 Digital amp – digitálne zosilnenie
+
 DAC – výstup na osciloskopu
+
 ## Rozdelenie úloh
 ## Dodatky
 
