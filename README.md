@@ -24,9 +24,13 @@ DAC – výstup na osciloskopu
 ## Dodatky
 
 ## Prepis
-Princip zostane taký istý u integrátoru, komparátoru, tvrarovača a prepínača
+Funkční generátor WaveGen (WaveFrom Generator) umožňuje generovat harmonický, trojúhelníkový a obdélníkový signál. V moderním pojetí umí WaveGen generovat signál libovolného průběhu, kdy se jedná o programovatelný DDS (Direct Digital Synthesis) generátor.
 
-Integrátor -> čítač/akumulátor
+Náš WaveGen (zkráceně WG) má následující architekturu: Clock Divider, Debouncer, Control Logic, Integrator, Comparator, IO pin, LUT, MUX, Digital Amplifier, DAC a Osciloscope.
+
+Princip fungování celého designu je popsán v těchto bodech:
+
+a)  Máme vstupní clk signál, který jde do Clock Divideru
 
 Integrátor bude sčítat hodnoty každý takt.(?) Čítač s preklápanie smeru (nahoru/dolu) alebo pila + absolútna hodnota.
 
