@@ -44,9 +44,9 @@ end Behavioral;
 -- =============================================================
 --  TRUE TRIANGLE version
 -- =============================================================
-library IEEE;                       -- <-- this was missing
-use IEEE.STD_LOGIC_1164.ALL;        -- <-- this was missing
-use IEEE.NUMERIC_STD.ALL;           -- <-- this was missing
+library IEEE;                       
+use IEEE.STD_LOGIC_1164.ALL;       
+use IEEE.NUMERIC_STD.ALL;          
 
 entity integrator_tri is
     generic (
