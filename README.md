@@ -1,19 +1,20 @@
 # DE1_Projekt_uloha2
-## Úlohy
-## Hlavné bloky:
+## Úlohy:
+
+# Hlavné bloky:
 Clock divider – delenie hodinového signálu
 
 Debouncer – ošetrenie tlačidiel (sw)
 
 Control logic – riadenie výberu vlnového tvaru
 
-Integrátor (čítač/akumulátor) – generuje pílu / trojuholník
+Integrátor (čítač/akumulátor) – generuje obdĺźnik / trojuholník
 
 Komparátor – s up_limit a down_limit, prepína smer integrácie
 
 LUT – tabuľka pre sínus (DDS princíp)
 
-Tune switch (MUX) – výber medzi obdĺžnikom, píla/trojuholník, sínus
+Tune switch (MUX) – výber medzi obdĺžnikom, píla/trojuholník, sínus, riadenie cez 1 tlačítko na 3 režimi
 
 Digital amp – digitálne zosilnenie
 
