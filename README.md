@@ -47,6 +47,6 @@ Výber medzi ▢ (MSB akumulátor), △ (hodnota akumulátoru), sínus (výstup 
 Vzorkovací frekvencia je hodinový signál FPGA. amplitúda je v N-bit pevne radová čiarke (napr. 12-16 bit). Frekvencia sa riadi krokom akumulátora - keď mám akumulátor phase <- phase + K, tak K urćuje frekvenciu (DDS princip). Hystereze má len dve konštanty v Kóde (up_limit a down_limit). Rozlíšenie 12 bitov, výstup 0-1V, max rychlosť stovky kHz až jednotky MHz
 
 
-![Screenshot](./imgs/schem.png)
+![Screenshot](./imgs/schema ver1.1.png)
 ![Screenshot](./imgs/design.jpg)
 
