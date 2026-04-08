@@ -1,4 +1,6 @@
 # DE1_Projekt_uloha2
+## Dodatky
+
 ## Prepis
 Princip zostane taký istý u integrátoru, komparátoru, tvrarovača a prepínača
 
