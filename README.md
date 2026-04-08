@@ -1,14 +1,15 @@
 # DE1_Projekt_uloha2
 ## Úlohy
-[] Clock divider - treba urobiť kód ktorý vstupný signál clk generuje niźšie frekvencie
-[] Control Logic - 
-[] Integrátor    - 
-[] LUT
-[] Tune switch
-[] 
-[]
-[]
-[]
+## Hlavné bloky:
+Clock divider – delenie hodinového signálu
+Debouncer – ošetrenie tlačidiel (sw)
+Control logic – riadenie výberu vlnového tvaru
+Integrátor (čítač/akumulátor) – generuje pílu / trojuholník
+Komparátor – s up_limit a down_limit, prepína smer integrácie
+LUT – tabuľka pre sínus (DDS princíp)
+Tune switch (MUX) – výber medzi obdĺžnikom, píla/trojuholník, sínus
+Digital amp – digitálne zosilnenie
+DAC – výstup na osciloskopu
 ## Rozdelenie úloh
 ## Dodatky
 
