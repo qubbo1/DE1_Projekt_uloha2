@@ -1,0 +1,222 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity triangle_square_gen is
+    port (
+        clk      : in  std_logic;
+        reset_n  : in  std_logic;
+        step     : in  unsigned(15 downto 0); -- řídí frekvenci
+        tri_out  : out unsigned(15 downto 0);
+        sq_out   : out std_logic
+    );
+end entity;
+
+architecture rtl of triangle_square_gen is
+    signal phase : unsigned(15 downto 0) := (others => '0');
+    signal dir   : std_logic := '1'; -- 1 = nahoru, 0 = dolů
+
+    constant UP_LIMIT   : unsigned(15 downto 0) := x"F000";
+    constant DOWN_LIMIT : unsigned(15 downto 0) := x"1000";
+begin
+
+    process(clk, reset_n)
+    begin
+        if reset_n = '0' then
+            phase <= (others => '0');
+            dir   <= '1';
+        elsif rising_edge(clk) then
+            -- hystereze
+            if phase > UP_LIMIT then
+                dir <= '0';
+            elsif phase < DOWN_LIMIT then
+                dir <= '1';
+            end if;
+
+            -- integrace
+            if dir = '1' then
+                phase <= phase + step;
+            else
+                phase <= phase - step;
+            end if;
+        end if;
+    end process;
+
+    tri_out <= phase;
+    sq_out  <= dir; -- obdélník
+
+end architecture;
+
+
+-----------------------------------------------------
+
+
+
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity sin_lut is
+    port (
+        addr : in  unsigned(7 downto 0);  -- 256 vzorků
+        dout : out unsigned(11 downto 0)  -- 12bit DAC
+    );
+end entity;
+
+architecture rtl of sin_lut is
+    type rom_t is array (0 to 255) of unsigned(11 downto 0);
+    constant rom : rom_t := (
+        0   => to_unsigned(2048, 12),
+        1   => to_unsigned(2098, 12),
+        2   => to_unsigned(2148, 12),
+        -- ... doplníš generovanými hodnotami ...
+        255 => to_unsigned(1998, 12)
+    );
+begin
+    dout <= rom(to_integer(addr));
+end architecture;
+
+
+
+-----------------------------------------------------
+
+
+
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity func_mux is
+    port (
+        func_sel : in  std_logic_vector(1 downto 0); -- 00=square, 01=tri, 10=sin
+        tri_in   : in  unsigned(15 downto 0);
+        sq_in    : in  std_logic;
+        sin_in   : in  unsigned(11 downto 0);
+        wave_out : out unsigned(11 downto 0)
+    );
+end entity;
+
+architecture rtl of func_mux is
+begin
+    process(func_sel, tri_in, sq_in, sin_in)
+        variable tmp : unsigned(11 downto 0);
+    begin
+        case func_sel is
+            when "00" => -- obdélník (0 nebo max)
+                if sq_in = '1' then
+                    tmp := (others => '1');
+                else
+                    tmp := (others => '0');
+                end if;
+            when "01" => -- trojúhelník (vezmeme horních 12 bitů)
+                tmp := tri_in(15 downto 4);
+            when "10" => -- sinus
+                tmp := sin_in;
+            when others =>
+                tmp := (others => '0');
+        end case;
+        wave_out <= tmp;
+    end process;
+end architecture;
+
+
+
+-----------------------------------------------------
+
+
+
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity top_generator is
+    port (
+        clk100   : in  std_logic;  -- 100 MHz z desky
+        reset_n  : in  std_logic;
+        sw       : in  std_logic_vector(1 downto 0); -- volba funkce
+        dac_data : out unsigned(11 downto 0)         -- do DAC
+    );
+end entity;
+
+architecture rtl of top_generator is
+    signal tri_sig  : unsigned(15 downto 0);
+    signal sq_sig   : std_logic;
+    signal sin_sig  : unsigned(11 downto 0);
+    signal wave_sig : unsigned(11 downto 0);
+
+    signal step     : unsigned(15 downto 0) := to_unsigned(200, 16); -- frekvence
+begin
+
+    tri_gen_inst : entity work.triangle_square_gen
+        port map (
+            clk     => clk100,
+            reset_n => reset_n,
+            step    => step,
+            tri_out => tri_sig,
+            sq_out  => sq_sig
+        );
+
+    sin_lut_inst : entity work.sin_lut
+        port map (
+            addr => tri_sig(15 downto 8),
+            dout => sin_sig
+        );
+
+    mux_inst : entity work.func_mux
+        port map (
+            func_sel => sw,
+            tri_in   => tri_sig,
+            sq_in    => sq_sig,
+            sin_in   => sin_sig,
+            wave_out => wave_sig
+        );
+
+    dac_data <= wave_sig;
+
+end architecture;
+
+
+
+-----------------------------------------------------
+
+
+
+
+# Clock
+set_property PACKAGE_PIN E3 [get_ports clk100]
+set_property IOSTANDARD LVCMOS33 [get_ports clk100]
+create_clock -period 10.000 -name sys_clk [get_ports clk100]
+
+# Switches
+set_property PACKAGE_PIN <PIN_SW0> [get_ports {sw[0]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {sw[0]}]
+
+set_property PACKAGE_PIN <PIN_SW1> [get_ports {sw[1]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {sw[1]}]
+
+# DAC output (VOUTP)
+set_property PACKAGE_PIN <PIN_VOUTP> [get_ports voutp]
+set_property IOSTANDARD LVCMOS33 [get_ports voutp]
+
+-----------------------------------------------------
+
+
+signal wave_in    : unsigned(11 downto 0);	-- zesilovac
+signal gain       : unsigned(3 downto 0);  -- 0..15
+signal wave_scaled: unsigned(15 downto 0);
+
+wave_scaled <= resize(wave_in, 16) * resize(gain, 16);
+dac_data    <= wave_scaled(15 downto 4); -- zpět na 12 bitů
+
+
+-----------------------------------------------------
+
+
+wave_div <= wave_in(11 downto 1); -- dělení 2	-- delic
+-- nebo
+wave_div <= wave_in(11 downto 4); -- dělení 16
+
+                                                                                 (sinus / trojúhelník)
