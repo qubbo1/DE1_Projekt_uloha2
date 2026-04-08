@@ -1,4 +1,15 @@
 # DE1_Projekt_uloha2
+## Úlohy
+[] Clock divider - treba urobiť kód ktorý vstupný signál clk generuje niźšie frekvencie
+[] Control Logic - 
+[] Integrátor    - 
+[] LUT
+[] Tune switch
+[] 
+[]
+[]
+[]
+## Rozdelenie úloh
 ## Dodatky
 
 ## Prepis
