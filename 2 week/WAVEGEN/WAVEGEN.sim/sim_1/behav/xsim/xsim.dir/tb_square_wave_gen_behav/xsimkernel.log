@@ -1,0 +1,4 @@
+Running: xsim.dir/tb_square_wave_gen_behav/xsimk.exe -simmode gui -wdb tb_square_wave_gen_behav.wdb -simrunnum 0 -socket 53078
+Design successfully loaded
+Design Loading Memory Usage: 10592 KB (Peak: 10592 KB)
+Design Loading CPU Usage: 46 ms
