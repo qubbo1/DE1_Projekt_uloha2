@@ -2,23 +2,25 @@
 ## Úlohy:
 
 # Hlavné bloky:
-Clock divider – delenie hodinového signálu
+Clock enable – dělení hodinového signálu
 
-Debouncer – ošetrenie tlačidiel (sw)
+Debounce – odstranění zakmitání tlačítka
 
-Control logic – riadenie výberu vlnového tvaru
+Control logic – řízení counteru, komparátoru a MUXu (vnitřní mozek)
 
-Integrátor (čítač/akumulátor) – generuje obdĺźnik / trojuholník
+Integrátor (čítač/akumulátor) – vytváří trojúhelníkový průběh
 
-Komparátor – s up_limit a down_limit, prepína smer integrácie
+Komparátor – porovnává dvě hodnoty na vstupu, výstupem je obdélníkový průběh signálu
 
-LUT – tabuľka pre sínus (DDS princíp)
+LUT – tabulka s pamětí (obsahuje např. sinus, trojúhelník, pilu atd.), ze které vybíráme hodnotu podle adresy (DDS princíp)
 
-Tune switch (MUX) – výber medzi obdĺžnikom, píla/trojuholník, sínus, riadenie cez 1 tlačítko na 3 režimi
+MUX – digitální přepínač, který vybírá trojúhelník, sinus, pilu či jiný průběh, který máme definovaný
 
-Digital amp – digitálne zosilnenie
+IO pin – fyzický port na FPGA desce (Nexys A7 50-T)
 
-DAC – výstup na osciloskopu
+PWM – modul, který převádí digitální "vlnu" na 1bitový signál
+
+RC filtr – vyhlazuje 1bitový signál z PWM na analogový signál
 
 ## Rozdelenie úloh
 ## Dodatky
@@ -26,29 +28,33 @@ DAC – výstup na osciloskopu
 ## Prepis
 Funkční generátor WaveGen (WaveFrom Generator) umožňuje generovat harmonický, trojúhelníkový a obdélníkový signál. V moderním pojetí umí WaveGen generovat signál libovolného průběhu, kdy se jedná o programovatelný DDS (Direct Digital Synthesis) generátor.
 
-Náš WaveGen (zkráceně WG) má následující architekturu: Clock Divider, Debouncer, Control Logic, Integrator, Comparator, IO pin, LUT, MUX, Digital Amplifier, DAC a Osciloscope.
+Náš WaveGen (zkráceně WG) má rozlišení 12 bitů a jeho architektura je následující: Clock Enable, Debounce, Control Logic, Counter, Comparator, IO pin, LUT, MUX, PWM a RC filtr.
 
 Princip fungování celého designu je popsán v těchto bodech:
 
-a)  Máme vstupní clk signál, který jde do Clock Divideru
+a)  Na vstupu WG máme vstupní clk signál, který napájí Debounce, Clock Enable, Control Logic, Counter a PWM. Dále vstup rst pro reset celého systému, a btn_in pro ovládání režimů a hodnot tlačítkem.
 
-Integrátor bude sčítat hodnoty každý takt.(?) Čítač s preklápanie smeru (nahoru/dolu) alebo pila + absolútna hodnota.
+b) Debounce vyčistí zakmitání tlačítka a vytvoří btn_press (jednopulzní signál — klik) a btn_state (stabilní stav). My používáme jen btn_state, který jde do bloku Control Logic.
 
-Komparátor -> digitálny komparátor s dvoma prahami
+c) Control Logic rozhoduje, jaký průběh se má generovat, zda Counter počítá nahoru nebo dolů, zda je povolený, jaký je threshold pro komparátor, kdy se má resetovat counter. Generuje en_out (povolení čítače), dir_out (směr čítání), rst_out (reset čítače), sel_out (výběr vlny pro MUX) a threshold_out (práh pro komparátor).
 
-Porovnávanie aktuálnej hodnoty △ s up_limit a down_limit. 
-Keď sa preskočí horná mez        => prepnutím smeru integrácie
-Keď hodnota klesne pod dolnú mez => prepnutie späť
+d) Counter je časová základna celého generátoru,jehož výstup jde do LUT a komparátoru. Generuje adresy a trojúhelníkový průběh. Když Counter počítá nahoru, tak rampa (přímka) roste (směr integrace roste), pokud Counter čítá dolů, tak rampa klesá. Tím, že Control Logic přepíná směr Counteru, tak vzniká trojúhelníkový průběh. Control logic přepíná směr integrace na základě dosažení maximální nebo minimální hodnoty v Counteru (minimální hodnota je 0 a maximální hodnota je 4095 — 2^12-1 je právě 4095).
 
-Tvarovač -> sinus -> LUT
-△ je adresa do ROM tabulky so sínosovkou.
-výstup ROM = vzorky sínusového signálu
+e) Komparátor porovnává hodnotu z Counteru a threshold z Control Logic. Když hodnota Counteru je větší než hodnota threshold, tak na výstupu komparátoru je logická 1, jinak je na výstupu logická 0. Odtud jdou výstupní hodnoty komparátoru do IO pinů FPGA desky, a pak na osciloskop (CH2) — obdélník.
 
-Prepinač -> Multiplexor
+f) LUT (Look-up-Table) je tabulka, která obsahuje 4096 hodnot sinusovky, takže když counter běží, tak LUT postupně vrací vzorky sinusovky.
 
-Výber medzi ▢ (MSB akumulátor), △ (hodnota akumulátoru), sínus (výstup z LUT)
+g) DC generátor je čistě konstanta (např. 2048 = 1,65V po filtraci).
 
-Vzorkovací frekvencia je hodinový signál FPGA. amplitúda je v N-bit pevne radová čiarke (napr. 12-16 bit). Frekvencia sa riadi krokom akumulátora - keď mám akumulátor phase <- phase + K, tak K urćuje frekvenciu (DDS princip). Hystereze má len dve konštanty v Kóde (up_limit a down_limit). Rozlíšenie 12 bitov, výstup 0-1V, max rychlosť stovky kHz až jednotky MHz
+h) Mux dostává na vstup sinus z LUT, trojúhelník z Counteru a DC úroveň. Podle sel_out vybere jeden z těchto průběhů (opět se uplatňuje řídicí logika).
+
+i) PWM modul vezme signál z MUXU, kterou vybral, a vytvoří signál, jehož šířka pulzu odpovídá amplitudě (Pulse-Width Modulation).
+
+j) RC filtr (dolní propust) zprůměruje šířku pulzu z PWM, odstraní vysdoké frekvence a vytvoří hladkou analogovou vlnu, kterou pouští na vstup osciloskopu (CH1). 
+
+
+
+
 
 
 ![Screenshot](./imgs/schemaV1.2.png)
