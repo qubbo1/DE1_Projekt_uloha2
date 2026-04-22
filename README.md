@@ -31,6 +31,14 @@ DE1_Projekt_uloha2/
 | **DAC** | Výstup na osciloskopu cez Pmod DA2 |
 
 
+| `wave_sel` | Skratka | Typ priebahu | Súbor / Popis |
+|:----------:|---------|--------------|---------------|
+| `00` | **SQr** | Square – obdĺžnikový | `square_gen.vhd` – 50 % duty cycle, skok 0 ↔ 255 |
+| `01` | **SIn** | Sine – sínusový | `sine_lut.vhd` – 256-položková LUT, plná sínusoida |
+| `10` | **SAu** | Sawtooth – pílový | `sawtooth_gen.vhd` – lineárny nábeh 0 → 255, potom skok na 0 |
+| `11` | **trI** | Triangle – trojuholníkový | `triangle_gen.vhd` – nábeh 0 → 255 a späť 255 → 0 |
+
+
 ## Ovládanie na doske
 
 | Vstup       | Funkcia                                                      |
@@ -82,12 +90,6 @@ JA[0] ──┤ R=1kΩ ├──┬── Výstup (osciloskop / DAC)
                    │
                   GND
 ```
-| `wave_sel` | Skratka | Typ priebahu | Súbor / Popis |
-|:----------:|---------|--------------|---------------|
-| `00` | **SQr** | Square – obdĺžnikový | `square_gen.vhd` – 50 % duty cycle, skok 0 ↔ 255 |
-| `01` | **SIn** | Sine – sínusový | `sine_lut.vhd` – 256-položková LUT, plná sínusoida |
-| `10` | **SAu** | Sawtooth – pílový | `sawtooth_gen.vhd` – lineárny nábeh 0 → 255, potom skok na 0 |
-| `11` | **trI** | Triangle – trojuholníkový | `triangle_gen.vhd` – nábeh 0 → 255 a späť 255 → 0 |
 
 
 
