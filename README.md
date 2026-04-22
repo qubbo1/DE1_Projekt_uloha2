@@ -2,7 +2,7 @@
 ### Platforma: Nexys A7-50T | Jazyk: VHDL | Nástroj: 
 
 Obsah:
-## [Ovládanie na doske](#ovládanie-na-doske)
+## [Ovládanie na doske](https://github.com/qubbo1/DE1_Projekt_uloha2/blob/main/README.md#ovladanie)
 
 ---
 ## Štruktúra projektu
