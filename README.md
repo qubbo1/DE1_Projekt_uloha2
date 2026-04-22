@@ -28,6 +28,8 @@ DE1_Projekt_uloha2/
 | `SW[4:3]`   | Výber priebehov (00=□, 01=∿, 10=⊿, 11=△) (EXPERIMENTÁLNE)   |
 | `BTNC`      | Systémový reset                                              |
 
+---
+
 ### Frekvenčné predvoľby (SW[2:0])
 
 | SW[2:0] | Frekvencia | 7-seg displej |
@@ -40,6 +42,8 @@ DE1_Projekt_uloha2/
 | `101`   | 1 kHz      | `    1000`    |
 | `110`   | 10 kHz     | `   10000`    |
 | `111`   | 100 kHz    | `  100000`    |
+
+---
 
 ### LED indikátory
 
