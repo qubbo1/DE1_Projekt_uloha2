@@ -61,6 +61,8 @@ DE1_Projekt_uloha2/
 
 Pre analógový výstup pridáme RC dolnopriepustný filter:
 
+(EXPERIMENTÁLNE)
+
 ```
 JA[0] ──┤ R=1kΩ ├──┬── Výstup (osciloskop / DAC)
                    │
