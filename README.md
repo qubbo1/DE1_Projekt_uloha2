@@ -30,13 +30,23 @@ DE1_Projekt_uloha2/
 | **Digital Amp** | Digitálne zosilnenie výstupného signálu |
 | **DAC** | Výstup na osciloskopu cez Pmod DA2 |
 
-
+## Popis priebehov
 | `wave_sel` | Skratka | Typ priebahu | Súbor / Popis |
 |:----------:|---------|--------------|---------------|
 | `00` | **SQr** | Square – obdĺžnikový | `square_gen.vhd` – 50 % duty cycle, skok 0 ↔ 255 |
 | `01` | **SIn** | Sine – sínusový | `sine_lut.vhd` – 256-položková LUT, plná sínusoida |
 | `10` | **SAu** | Sawtooth – pílový | `sawtooth_gen.vhd` – lineárny nábeh 0 → 255, potom skok na 0 |
 | `11` | **trI** | Triangle – trojuholníkový | `triangle_gen.vhd` – nábeh 0 → 255 a späť 255 → 0 |
+
+## Ovladanie
+| Vstup       | Podmienka   | Funkcia                          |
+|-------------|-------------|----------------------------------|
+| `BTNU` ↑   | `SW(0)=1`   | Zvýšiť frekvenciu                |
+| `BTND` ↓   | `SW(0)=1`   | Znížiť frekvenciu                |
+| `BTNR` →   | `SW(1)=1`   | Ďalší vlnový tvar                |
+| `BTNL` ←   | `SW(1)=1`   | Predchádzajúci vlnový tvar       |
+| `BTNC`      | –           | Systémový reset                  |
+| `SW(2)`     | –           | Povolenie AUX výstupu            |
 
 
 ## Ovládanie na doske
