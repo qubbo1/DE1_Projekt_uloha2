@@ -1,7 +1,6 @@
 # DE1 Projekt – Generátor priebehov (úloha 2)
-## Platforma: Nexys A7-50T | Jazyk: VHDL | Nástroj: Vivado
+### Platforma: Nexys A7-50T | Jazyk: VHDL | Nástroj: Vivado
 
----
 
 ## Štruktúra projektu
 
@@ -18,7 +17,7 @@ DE1_Projekt_uloha2/
     └── nexys_a7_50t.xdc      ← Pin constraints
 ```
 
----
+
 
 ## Ovládanie na doske
 
@@ -54,7 +53,7 @@ DE1_Projekt_uloha2/
 | `LED[2]`| kHz indikátor                      |
 | `LED[6:5]`| Vybraný priebeh (SW[4:3])        |
 
----
+
 
 ## PWM výstup
 
@@ -70,7 +69,7 @@ JA[0] ──┤ R=1kΩ ├──┬── Výstup (osciloskop / DAC)
                   GND
 ```
 
----
+
 
 ## Bloková Schéma
 
