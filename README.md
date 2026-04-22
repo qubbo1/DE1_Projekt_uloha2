@@ -1,5 +1,9 @@
 # DE1 Projekt – Generátor priebehov (úloha 2)
 ### Platforma: Nexys A7-50T | Jazyk: VHDL | Nástroj: 
+
+Obsah:
+Ovladanie na doske https://github.com/qubbo1/DE1_Projekt_uloha2/blob/main/README.md#ovl%C3%A1danie-na-doske
+
 ---
 ## Štruktúra projektu
 
