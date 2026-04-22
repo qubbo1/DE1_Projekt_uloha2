@@ -1,6 +1,7 @@
 # DE1 Projekt – Generátor priebehov (úloha 2)
-### Platforma: Nexys A7-50T | Jazyk: VHDL | Nástroj: Vivado
-
+### Platforma: Nexys A7-50T | Jazyk: VHDL | Nástroj: 
+## Štruktúra projektu
+## 🔧 Architecture Overview
 ---
 ## Štruktúra projektu
 
