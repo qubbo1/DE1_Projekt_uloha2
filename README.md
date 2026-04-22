@@ -1,61 +1,89 @@
-# DE1_Projekt_uloha2
-## Úlohy:
+# DE1 Projekt – Generátor priebehov (úloha 2)
+## Platforma: Nexys A7-50T | Jazyk: VHDL | Nástroj: Vivado
 
-# Hlavné bloky:
-Clock enable – dělení hodinového signálu
+---
 
-Debounce – odstranění zakmitání tlačítka
+## Štruktúra projektu
 
-Control logic – řízení counteru, komparátoru a MUXu (vnitřní mozek)
+```
+DE1_Projekt_uloha2/
+├── src/
+│   ├── square_wave_gen.vhd   ← Generátor obdĺžnika [Bobi]
+│   ├── pwm_gen.vhd           ← 8-bit PWM modul (zdieľaný)
+│   ├── seg7_ctrl.vhd         ← Ovládač 7-seg displeja (zdieľaný)
+│   └── top.vhd               ← Vrchná entita (zdieľaná)
+├── sim/
+│   └── tb_square_wave_gen.vhd ← Testbench pre square_wave_gen
+└── constraints/
+    └── nexys_a7_50t.xdc      ← Pin constraints
+```
 
-Integrátor (čítač/akumulátor) – vytváří trojúhelníkový průběh
+---
 
-Komparátor – porovnává dvě hodnoty na vstupu, výstupem je obdélníkový průběh signálu
+## Ovládanie na doske
 
-LUT – tabulka s pamětí (obsahuje např. sinus, trojúhelník, pilu atd.), ze které vybíráme hodnotu podle adresy (DDS princíp)
+| Vstup       | Funkcia                                      |
+|-------------|----------------------------------------------|
+| `SW[2:0]`   | Výber frekvencie (8 predvolieb)              |
+| `SW[4:3]`   | Výber priebehov (00=□, 01=∿, 10=⊿, 11=△)   |
+| `BTNC`      | Systémový reset                              |
 
-MUX – digitální přepínač, který vybírá trojúhelník, sinus, pilu či jiný průběh, který máme definovaný
+### Frekvenčné predvoľby (SW[2:0])
 
-IO pin – fyzický port na FPGA desce (Nexys A7 50-T)
+| SW[2:0] | Frekvencia | 7-seg displej |
+|---------|-----------|---------------|
+| `000`   | 1 Hz      | `       1`    |
+| `001`   | 2 Hz      | `       2`    |
+| `010`   | 5 Hz      | `       5`    |
+| `011`   | 10 Hz     | `      10`    |
+| `100`   | 100 Hz    | `     100`    |
+| `101`   | 1 kHz     | `    1000`    |
+| `110`   | 10 kHz    | `   10000`    |
+| `111`   | 100 kHz   | `  100000`    |
 
-PWM – modul, který převádí digitální "vlnu" na 1bitový signál
+### LED indikátory
 
-RC filtr – vyhlazuje 1bitový signál z PWM na analogový signál
+| LED     | Popis                              |
+|---------|------------------------------------|
+| `LED[0]`| Surový obdĺžnik (bliká pri 1–10 Hz)|
+| `LED[1]`| Hz indikátor                       |
+| `LED[2]`| kHz indikátor                      |
+| `LED[6:5]`| Vybraný priebeh (SW[4:3])        |
 
-## Rozdelenie úloh
-## Dodatky
+---
 
-## Prepis
-Funkční generátor WaveGen (WaveFrom Generator) umožňuje generovat harmonický, trojúhelníkový a obdélníkový signál. V moderním pojetí umí WaveGen generovat signál libovolného průběhu, kdy se jedná o programovatelný DDS (Direct Digital Synthesis) generátor.
+## PWM výstup
 
-Náš WaveGen (zkráceně WG) má rozlišení 8 bitů a jeho architektura je následující: Clock Enable, Debounce, Control Logic, Counter, Comparator, IO pin, LUT, MUX, PWM a RC filtr.
+**Pin:** `JA[0]` (Pmod JA, pin 1)
 
-Princip fungování celého designu je popsán v těchto bodech:
+Pre analógový výstup pridaj RC dolnopriepustný filter:
 
-a)  Na vstupu WG máme vstupní clk signál, který napájí Debounce, Clock Enable, Control Logic, Counter a PWM. Dále vstup rst pro reset celého systému, a btn_in pro ovládání režimů a hodnot tlačítkem.
+```
+JA[0] ──┤ R=1kΩ ├──┬── Výstup (osciloskop / DAC)
+                   │
+                 C=100nF
+                   │
+                  GND
+```
 
-b) Debounce vyčistí zakmitání tlačítka a vytvoří btn_press (jednopulzní signál — klik) a btn_state (stabilní stav). My používáme jen btn_state, který jde do bloku Control Logic.
+---
 
-c) Control Logic rozhoduje, jaký průběh se má generovat, zda Counter počítá nahoru nebo dolů, zda je povolený, jaký je threshold pro komparátor, kdy se má resetovat counter. Generuje en_out (povolení čítače), dir_out (směr čítání), rst_out (reset čítače), sel_out (výběr vlny pro MUX) a threshold_out (práh pro komparátor).
+## Ako doplniť vlastný priebeh (pre ostatných členov skupiny)
 
-d) Counter je časová základna celého generátoru,jehož výstup jde do LUT a komparátoru. Generuje adresy a trojúhelníkový průběh. Když Counter počítá nahoru, tak rampa (přímka) roste (směr integrace roste), pokud Counter čítá dolů, tak rampa klesá. Tím, že Control Logic přepíná směr Counteru, tak vzniká trojúhelníkový průběh. Control logic přepíná směr integrace na základě dosažení maximální nebo minimální hodnoty v Counteru (minimální hodnota je 0 a maximální hodnota je 255 — 2^8-1 je právě 255).
+1. Vytvor súbor `src/sine_wave_gen.vhd` (alebo sawtooth/triangle)
+2. Rozhranie musí byť **rovnaké**:
+   ```vhdl
+   entity sine_wave_gen is
+     port (
+       clk      : in  std_logic;
+       rst      : in  std_logic;
+       freq_sel : in  std_logic_vector(2 downto 0);
+       wave_out : out std_logic_vector(7 downto 0);  -- 8-bit amplitúda
+       wave_raw : out std_logic
+     );
+   end entity;
+   ```
+3. V `top.vhd` odkomentuj príslušné riadky (označené `-- TODO`)
 
-e) Komparátor porovnává hodnotu z Counteru a threshold z Control Logic. Když hodnota Counteru je větší než hodnota threshold, tak na výstupu komparátoru je logická 1, jinak je na výstupu logická 0. Odtud jdou výstupní hodnoty komparátoru do IO pinů FPGA desky, a pak na osciloskop (CH2) — obdélník.
-
-f) LUT (Look-up-Table) je tabulka, která obsahuje 4096 hodnot sinusovky, takže když counter běží, tak LUT postupně vrací vzorky sinusovky.
-
-g) Mux dostává na vstup sinus z LUT, trojúhelník z Counteru a DC úroveň. Podle sel_out vybere jeden z těchto průběhů (opět se uplatňuje řídicí logika).
-
-h) PWM modul vezme signál z MUXU, kterou vybral, a vytvoří signál, jehož šířka pulzu odpovídá amplitudě (Pulse-Width Modulation).
-
-i) RC filtr (dolní propust) zprůměruje šířku pulzu z PWM, odstraní vysdoké frekvence a vytvoří hladkou analogovou vlnu, kterou pouští na vstup osciloskopu (CH1). 
-
-
-
-
-
-
-![Screenshot](./imgs/schemaV1.4.png)
-![Screenshot](./imgs/schemaV1.1.png)
-![Screenshot](./imgs/design.jpg)
+---
 
