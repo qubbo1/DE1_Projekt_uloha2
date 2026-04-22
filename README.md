@@ -27,15 +27,15 @@ DE1_Projekt_uloha2/
 
 | Module | Description |
 |---|---|
-| **Clock Divider** | Delenie hodinového signálu na pracovnú frekvenciu |
+| **Clock Enable** | Delenie hodinového signálu na pracovnú frekvenciu |
 | **Debouncer** | Ošetrenie zákmitov tlačidiel (SW debouncing) |
-| **Control Logic** | Riadenie výberu vlnového tvaru |
-| **Integrátor** | Čítač/akumulátor – generuje obdĺžnik a trojuholník |
-| **Komparátor** | Porovnáva s `up_limit` a `down_limit`, prepína smer integrácie |
-| **LUT** | Tabuľka hodnôt pre sínus (DDS princíp) |
-| **Tune Switch (MUX)** | Výber medzi obdĺžnikom, píla/trojuholník, sínus – 1 tlačidlo, 3 režimy |
-| **Digital Amp** | Digitálne zosilnenie výstupného signálu |
-| **DAC** | Výstup na osciloskopu cez Pmod DA2 |
+| **Control Logic** | Riadenie výberu vlnového tvaru | --preklik na simulaciu--
+| **Integrátor** | Čítač/akumulátor – generuje obdĺžnik a trojuholník | --preklik na simulaciu--
+| **Komparátor** | Porovnáva s `up_limit` a `down_limit`, prepína smer integrácie | --preklik na simulaciu--
+| **LUT** | Tabuľka hodnôt pre sínus (DDS princíp) | --preklik na simulaciu--
+| **Tune Switch (MUX)** | Výber medzi obdĺžnikom, píla/trojuholník, sínus – 1 tlačidlo, 3 režimy | --preklik na simulaciu--
+| **Digital Amp** | Digitálne zosilnenie výstupného signálu | --preklik na simulaciu--
+| **DAC** | Výstup na osciloskopu cez Pmod DA2 | --preklik na simulaciu--
 
 ## Popis priebehov
 | `wave_sel` | Skratka | Typ priebahu | Súbor / Popis |
