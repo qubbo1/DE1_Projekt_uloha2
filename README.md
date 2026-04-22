@@ -55,7 +55,7 @@ i) RC filtr (dolní propust) zprůměruje šířku pulzu z PWM, odstraní vysdok
 
 
 
-![Screenshot](./imgs/schemaV1.3.png)
+![Screenshot](./imgs/schemaV1.4.png)
 ![Screenshot](./imgs/schemaV1.1.png)
 ![Screenshot](./imgs/design.jpg)
 
