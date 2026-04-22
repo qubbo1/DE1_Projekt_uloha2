@@ -59,7 +59,7 @@ DE1_Projekt_uloha2/
 
 **Pin:** `JA[0]` (Pmod JA, pin 1)
 
-Pre analógový výstup pridaj RC dolnopriepustný filter:
+Pre analógový výstup pridáme RC dolnopriepustný filter:
 
 ```
 JA[0] ──┤ R=1kΩ ├──┬── Výstup (osciloskop / DAC)
