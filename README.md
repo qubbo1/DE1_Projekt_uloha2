@@ -68,22 +68,5 @@ JA[0] ──┤ R=1kΩ ├──┬── Výstup (osciloskop / DAC)
 
 ---
 
-## Ako doplniť vlastný priebeh (pre ostatných členov skupiny)
 
-1. Vytvor súbor `src/sine_wave_gen.vhd` (alebo sawtooth/triangle)
-2. Rozhranie musí byť **rovnaké**:
-   ```vhdl
-   entity sine_wave_gen is
-     port (
-       clk      : in  std_logic;
-       rst      : in  std_logic;
-       freq_sel : in  std_logic_vector(2 downto 0);
-       wave_out : out std_logic_vector(7 downto 0);  -- 8-bit amplitúda
-       wave_raw : out std_logic
-     );
-   end entity;
-   ```
-3. V `top.vhd` odkomentuj príslušné riadky (označené `-- TODO`)
-
----
 
