@@ -1,7 +1,7 @@
 # DE1 Projekt – Generátor priebehov (úloha 2)
 ### Platforma: Nexys A7-50T | Jazyk: VHDL | Nástroj: Vivado
 
-
+---
 ## Štruktúra projektu
 
 ```
@@ -27,7 +27,7 @@ DE1_Projekt_uloha2/
 | `SW[4:3]`   | Výber priebehov (00=□, 01=∿, 10=⊿, 11=△) (EXPERIMENTÁLNE)   |
 | `BTNC`      | Systémový reset                                              |
 
----
+
 
 ### Frekvenčné predvoľby (SW[2:0])
 
@@ -42,7 +42,7 @@ DE1_Projekt_uloha2/
 | `110`   | 10 kHz     | `   10000`    |
 | `111`   | 100 kHz    | `  100000`    |
 
----
+
 
 ### LED indikátory
 
