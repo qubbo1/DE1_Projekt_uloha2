@@ -1,7 +1,0 @@
-Time resolution is 1 ps
-Note: INFO: Reset dokoncený. freq=1Hz, wave=SQr
-Time: 200 ns  Iteration: 0  Process: /tb_top/p_stim  File: C:/Users/NoBobi/WAVE-FORM/WAVE-FORM.srcs/sim_1/imports/Downloads/tb_top.vhd
-Note: INFO: AUX povolený (SW2=1)
-Time: 250 ns  Iteration: 0  Process: /tb_top/p_stim  File: C:/Users/NoBobi/WAVE-FORM/WAVE-FORM.srcs/sim_1/imports/Downloads/tb_top.vhd
-Note: INFO: Frekvencia zmenená 3x nahor (ocakávaná = 10 Hz)
-Time: 900 ns  Iteration: 0  Process: /tb_top/p_stim  File: C:/Users/NoBobi/WAVE-FORM/WAVE-FORM.srcs/sim_1/imports/Downloads/tb_top.vhd
