@@ -74,7 +74,7 @@ JA[0] ──┤ R=1kΩ ├──┬── Výstup (osciloskop / DAC)
                    │
                   GND
 ```
-##Simulácie
+## Simulácie
 
 
 
