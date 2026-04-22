@@ -1,12 +1,11 @@
 # DE1 Projekt – Generátor priebehov (úloha 2)
-### Platforma: Nexys A7-50T | Jazyk: VHDL | Nástroj: 
+### Platforma: Nexys A7-50T | Jazyk: VHDL | Nástroj: Vivado
 
 # Obsah:
-## Štruktúra projektu
-## 🔧 Architecture Overview
-## Popis priebehov
-## Ovladanie
-## [Ovládanie na doske](https://github.com/qubbo1/DE1_Projekt_uloha2/blob/main/README.md#ovladanie)
+## [Štruktúra projektu](https://github.com/qubbo1/DE1_Projekt_uloha2#%C5%A1trukt%C3%BAra-projektu-1)
+## [🔧 Architecture Overview](https://github.com/qubbo1/DE1_Projekt_uloha2#-architecture-overview-1)
+## [Popis priebehov](https://github.com/qubbo1/DE1_Projekt_uloha2#popis-priebehov-1)
+## [Ovladanie](https://github.com/qubbo1/DE1_Projekt_uloha2#ovladanie-1)
 
 ---
 ## Štruktúra projektu
