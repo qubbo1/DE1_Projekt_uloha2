@@ -6,6 +6,7 @@
 ## [🔧 Architecture Overview](https://github.com/qubbo1/DE1_Projekt_uloha2#-architecture-overview-1)
 ## [Popis priebehov](https://github.com/qubbo1/DE1_Projekt_uloha2#popis-priebehov-1)
 ## [Ovladanie](https://github.com/qubbo1/DE1_Projekt_uloha2#ovladanie-1)
+## [Simulácie](https://github.com/qubbo1/DE1_Projekt_uloha2/blob/main/README.md#simul%C3%A1cie)
 
 ---
 ## Štruktúra projektu
