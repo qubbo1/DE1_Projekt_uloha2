@@ -1,7 +1,7 @@
 # DE1 Projekt – Generátor priebehov (úloha 2)
 ### Platforma: Nexys A7-50T | Jazyk: VHDL | Nástroj: 
 
-###Obsah:
+### Obsah:
 ## Štruktúra projektu
 ## 🔧 Architecture Overview
 ## Popis priebehov
