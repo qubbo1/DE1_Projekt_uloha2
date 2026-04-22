@@ -8,10 +8,10 @@
 ```
 DE1_Projekt_uloha2/
 ├── src/
-│   ├── square_wave_gen.vhd   ← Generátor obdĺžnika [Bobi]
-│   ├── pwm_gen.vhd           ← 8-bit PWM modul (zdieľaný)
-│   ├── seg7_ctrl.vhd         ← Ovládač 7-seg displeja (zdieľaný)
-│   └── top.vhd               ← Vrchná entita (zdieľaná)
+│   ├── square_wave_gen.vhd   ← Generátor obdĺžnika 
+│   ├── pwm_gen.vhd           ← 8-bit PWM modul 
+│   ├── seg7_ctrl.vhd         ← Ovládač 7-seg displeja 
+│   └── top.vhd               ← Vrchná entita 
 ├── sim/
 │   └── tb_square_wave_gen.vhd ← Testbench pre square_wave_gen
 └── constraints/
@@ -22,11 +22,11 @@ DE1_Projekt_uloha2/
 
 ## Ovládanie na doske
 
-| Vstup       | Funkcia                                      |
-|-------------|----------------------------------------------|
-| `SW[2:0]`   | Výber frekvencie (8 predvolieb)              |
-| `SW[4:3]`   | Výber priebehov (00=□, 01=∿, 10=⊿, 11=△)   |
-| `BTNC`      | Systémový reset                              |
+| Vstup       | Funkcia                                                      |
+|-------------|--------------------------------------------------------------|
+| `SW[2:0]`   | Výber frekvencie (8 predvolieb)                              |
+| `SW[4:3]`   | Výber priebehov (00=□, 01=∿, 10=⊿, 11=△) (EXPERIMENTÁLNE)   |
+| `BTNC`      | Systémový reset                                              |
 
 ### Frekvenčné predvoľby (SW[2:0])
 
@@ -68,5 +68,8 @@ JA[0] ──┤ R=1kΩ ├──┬── Výstup (osciloskop / DAC)
 
 ---
 
+## Bloková Schéma
 
+![Screenshot](./imgs/schemaV1.4.png)
+![Screenshot](./imgs/schemaV1.1.png)
 
