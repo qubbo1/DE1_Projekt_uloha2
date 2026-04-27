@@ -37,6 +37,9 @@ DE1_Projekt_uloha2/
 | **Digital Amp** | Digitálne zosilnenie výstupného signálu | --preklik na simulaciu--
 | **DAC** | Výstup na osciloskopu cez Pmod DA2 | --preklik na simulaciu--
 
+[component_ref_v2.xlsx](https://github.com/user-attachments/files/27138413/component_ref_v2.xlsx)
+
+
 ## Popis priebehov
 | `wave_sel` | Skratka | Typ priebahu | Súbor / Popis |
 |:----------:|---------|--------------|---------------|
