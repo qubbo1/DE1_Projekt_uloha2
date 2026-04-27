@@ -39,72 +39,165 @@ DE1_Projekt_uloha2/
 | **Digital Amp** | Digitálne zosilnenie výstupného signálu | --preklik na simulaciu--
 | **DAC** | Výstup na osciloskopu cez Pmod DA2 | --preklik na simulaciu--
 
-# Waveform Generator — VHDL Component Reference
+# Reference Komponent Generátoru Průběhů (VHDL)
 
-| Component | Signal Name | Direction | VHDL Type | Vector Size | Signal Description | Component Function |
-|-----------|-------------|-----------|-----------|-------------|--------------------|--------------------|
-| clk_en | clk | in | std_logic | — | 100 MHz system clock | Generic clock-enable generator. Outputs a single-cycle pulse every G_MAX clock cycles. Default G_MAX=1,000,000. Used by debounce with G_MAX=200,000 → 2 ms sampling at 100 MHz. |
-|  | rst | in | std_logic | — | Synchronous active-high reset |  |
-|  | ce | out | std_logic | — | Single-cycle enable pulse |  |
-| debounce | clk | in | std_logic | — | 100 MHz system clock | Button debounce and edge detector. Synchronises raw input, samples every 2 ms via clk_en, requires 4 consecutive identical samples. Outputs stable level, one-cycle press pulse, one-cycle release pulse. |
-|  | rst | in | std_logic | — | Synchronous active-high reset |  |
-|  | btn_in | in | std_logic | — | Raw bouncy button input |  |
-|  | btn_state | out | std_logic | — | Debounced stable level |  |
-|  | btn_press | out | std_logic | — | One-cycle pulse on press (rising edge) |  |
-|  | btn_release | out | std_logic | — | One-cycle pulse on release (falling edge) |  |
-| control_logic | clk | in | std_logic | — | 100 MHz system clock | Menu controller. SW[0]=1,SW[1]=0 → frequency mode: BTNU/BTND change digit at cursor, BTNR/BTNL move cursor. SW[1]=1,SW[0]=0 → waveform mode: BTNU/BTND cycle waveform. Outputs binary freq (0–9999 Hz), 2-bit wave select, and 64-bit display word. |
-|  | rst | in | std_logic | — | Synchronous active-high reset |  |
-|  | btn_u | in | std_logic | — | Debounced Up button pulse |  |
-|  | btn_d | in | std_logic | — | Debounced Down button pulse |  |
-|  | btn_l | in | std_logic | — | Debounced Left button pulse |  |
-|  | btn_r | in | std_logic | — | Debounced Right button pulse |  |
-|  | sw_freq | in | std_logic | — | SW[0] — frequency edit mode |  |
-|  | sw_wave | in | std_logic | — | SW[1] — waveform select mode |  |
-|  | freq_val | out | std_logic_vector | (13 downto 0) | Binary frequency 0–9999 Hz |  |
-|  | wave_sel | out | std_logic_vector | (1 downto 0) | Waveform: 00=SQ 01=SIN 10=SAW 11=TRI |  |
-|  | disp_data | out | std_logic_vector | (63 downto 0) | 8×8-bit display word for seg7_ctrl |  |
-| phase_counter | clk | in | std_logic | — | 100 MHz system clock | DDS phase accumulator. Each clock cycle adds incr = freq_val × 43 to a 32-bit register. Upper 8 bits = phase output. Accuracy: f_out ≈ freq_val × 1.001 Hz (error < 0.12 %). freq_val=0 → phase frozen (DC). |
-|  | rst | in | std_logic | — | Synchronous reset — clears accumulator |  |
-|  | freq_val | in | std_logic_vector | (13 downto 0) | Target frequency in Hz (0–9999) |  |
-|  | phase | out | std_logic_vector | (7 downto 0) | Current DDS phase 0–255 |  |
-| sine_lut | addr | in | std_logic_vector | (7 downto 0) | Phase address 0–255 | Asynchronous 256-entry sine ROM. Values = round(127.5 + 127.5 × sin(2π×i/256)). Range: 0x00 (neg. peak) … 0x80 (mid) … 0xFF (pos. peak). Output valid in same cycle as address. |
-|  | data_out | out | std_logic_vector | (7 downto 0) | Sine amplitude at given phase |  |
-| square_gen | phase | in | std_logic_vector | (7 downto 0) | Phase input from phase_counter | Combinational 50 % duty-cycle square wave. phase[7]='1' → 0xFF; phase[7]='0' → 0x00. No clock or reset needed. |
-|  | wave_out | out | std_logic_vector | (7 downto 0) | 0xFF (high half) or 0x00 (low half) |  |
-| sawtooth_gen | phase | in | std_logic_vector | (7 downto 0) | Phase input 0–255 | Combinational rising sawtooth. Output = phase directly (0→255 linear ramp, instant reset). No clock or reset needed. |
-|  | wave_out | out | std_logic_vector | (7 downto 0) | Sawtooth amplitude = phase |  |
-| triangle_gen | phase | in | std_logic_vector | (7 downto 0) | Phase input from phase_counter | Combinational triangle wave. phase[7]='0' → output rises 0→254; phase[7]='1' → output falls 254→0. Symmetric, no sharp edges. No clock or reset needed. |
-|  | wave_out | out | std_logic_vector | (7 downto 0) | Triangle amplitude 0x00–0xFE–0x00 |  |
-| wave_mux | wave_sq | in | std_logic_vector | (7 downto 0) | Square wave sample | 4-to-1 combinational multiplexer. Selects one 8-bit waveform sample based on wave_sel. Default (others) → Square. |
-|  | wave_sin | in | std_logic_vector | (7 downto 0) | Sine wave sample |  |
-|  | wave_saw | in | std_logic_vector | (7 downto 0) | Sawtooth wave sample |  |
-|  | wave_tri | in | std_logic_vector | (7 downto 0) | Triangle wave sample |  |
-|  | wave_sel | in | std_logic_vector | (1 downto 0) | 00=SQ  01=SIN  10=SAW  11=TRI |  |
-|  | wave_out | out | std_logic_vector | (7 downto 0) | Selected waveform output |  |
-| pwm | clk | in | std_logic | — | 100 MHz system clock | 8-bit PWM at ≈390 kHz (100 MHz÷256). Counter 0–255 cycles each period; output HIGH while counter < sample. Drive RC low-pass → analogue waveform on AUX jack. |
-|  | rst | in | std_logic | — | Synchronous active-high reset |  |
-|  | sample | in | std_logic_vector | (7 downto 0) | Duty cycle: 0x00=0%  0x80=50%  0xFF≈100% |  |
-|  | pwm_out | out | std_logic | — | PWM output signal (~390 kHz) |  |
-| seg7_ctrl | clk | in | std_logic | — | 100 MHz system clock | Time-multiplexed 8-digit 7-seg controller. Cycles digits at 1 ms each (100,000 cycles) → ~125 Hz refresh per digit. Byte format: bit[7]=DP, bits[6:0]=segments (active-LOW). Byte 0=AN0 (rightmost). |
-|  | rst | in | std_logic | — | Synchronous active-high reset |  |
-|  | disp_data | in | std_logic_vector | (63 downto 0) | 8×8-bit display data (byte 0=AN0) |  |
-|  | seg | out | std_logic_vector | (6 downto 0) | {CG,CF,CE,CD,CC,CB,CA} active-LOW |  |
-|  | dp | out | std_logic | — | Decimal point, active-LOW |  |
-|  | an | out | std_logic_vector | (7 downto 0) | Anode enables, one LOW active at a time |  |
-| top<br>(wavegen_top) | CLK100MHZ | in | std_logic | — | 100 MHz board oscillator | Top-level structural entity (Nexys A7-50T). Connects all sub-components. BTNC=reset. SW[0]/SW[1]=control mode. SW[2]=AUX+JA enable. LED held '0'. AUD_PWM→RC→3.5 mm jack. JA[0]=wave MSB for oscilloscope. |
-|  | BTNC | in | std_logic | — | Centre button → system reset |  |
-|  | BTNU | in | std_logic | — | Up button |  |
-|  | BTND | in | std_logic | — | Down button |  |
-|  | BTNL | in | std_logic | — | Left button |  |
-|  | BTNR | in | std_logic | — | Right button |  |
-|  | SW | in | std_logic_vector | (15 downto 0) | Switches: [0]=freq [1]=wave [2]=AUX en. |  |
-|  | LED | out | std_logic_vector | (15 downto 0) | LEDs — unused, driven '0' |  |
-|  | SEG | out | std_logic_vector | (6 downto 0) | 7-seg segments (active-LOW) |  |
-|  | DP | out | std_logic | — | Decimal point (active-LOW) |  |
-|  | AN | out | std_logic_vector | (7 downto 0) | 7-seg anodes (active-LOW) |  |
-|  | AUD_PWM | out | std_logic | — | PWM audio to AUX jack (gated SW[2]) |  |
-|  | AUD_SD | out | std_logic | — | Audio amp enable = SW[2] |  |
-|  | JA | out | std_logic_vector | (7 downto 0) | Pmod: JA[0]=wave MSB (SW[2]), rest '0' |  |
+### Komponenta: `clk_en`
+**Funkce:** Obecný generátor povolení hodin (clock-enable). Generuje jednocyklový pulz každých G_MAX hodinových cyklů. Výchozí G_MAX=1 000 000. Používá se pro ošetření zákmitů (debounce) s G_MAX=200 000 → vzorkování 2 ms při 100 MHz.
+
+| Název signálu | Směr | Datový typ VHDL | Velikost vektoru | Popis signálu |
+|---|---|---|---|---|
+| `clk` | in | std_logic | - | 100 MHz systémové hodiny |
+| `rst` | in | std_logic | - | Synchronní reset aktivní v úrovni High |
+| `ce` | out | std_logic | - | Jednocyklový povolovací pulz |
+
+---
+
+### Komponenta: `debounce`
+**Funkce:** Ošetření zákmitů tlačítek a detektor hran. Synchronizuje surový vstup, vzorkuje každé 2 ms přes clk_en, vyžaduje 4 po sobě jdoucí shodné vzorky. Výstupem je stabilní úroveň, jednocyklový pulz při stisku, jednocyklový pulz při uvolnění.
+
+| Název signálu | Směr | Datový typ VHDL | Velikost vektoru | Popis signálu |
+|---|---|---|---|---|
+| `clk` | in | std_logic | - | 100 MHz systémové hodiny |
+| `rst` | in | std_logic | - | Synchronní reset aktivní v úrovni High |
+| `btn_in` | in | std_logic | - | Surový vstup tlačítka (se zákmity) |
+| `btn_state` | out | std_logic | - | Stabilní úroveň (ošetřeno proti zákmitům) |
+| `btn_press` | out | std_logic | - | Jednocyklový pulz při stisknutí (náběžná hrana) |
+| `btn_release` | out | std_logic | - | Jednocyklový pulz při uvolnění (sestupná hrana) |
+
+---
+
+### Komponenta: `control_logic`
+**Funkce:** Řadič menu. SW[0]=1,SW[1]=0 → režim frekvence: BTNU/BTND mění číslici na pozici kurzoru, BTNR/BTNL posunuje kurzor. SW[1]=1,SW[0]=0 → režim průběhu: BTNU/BTND přepíná průběh. Výstupem je binární frekvence (0–9999 Hz), 2bitový výběr průběhu a 64bitové slovo pro displej.
+
+| Název signálu | Směr | Datový typ VHDL | Velikost vektoru | Popis signálu |
+|---|---|---|---|---|
+| `clk` | in | std_logic | - | 100 MHz systémové hodiny |
+| `rst` | in | std_logic | - | Synchronní reset aktivní v úrovni High |
+| `btn_u` | in | std_logic | - | Pulz tlačítka Nahoru (ošetřený) |
+| `btn_d` | in | std_logic | - | Pulz tlačítka Dolů (ošetřený) |
+| `btn_l` | in | std_logic | - | Pulz tlačítka Vlevo (ošetřený) |
+| `btn_r` | in | std_logic | - | Pulz tlačítka Vpravo (ošetřený) |
+| `sw_freq` | in | std_logic | - | SW[0] — režim úpravy frekvence |
+| `sw_wave` | in | std_logic | - | SW[1] — režim výběru průběhu |
+| `freq_val` | out | std_logic_vector | (13 downto 0) | Binární frekvence 0–9999 Hz |
+| `wave_sel` | out | std_logic_vector | (1 downto 0) | Průběh: 00=SQ 01=SIN 10=SAW 11=TRI |
+| `disp_data` | out | std_logic_vector | (63 downto 0) | 8×8bitové slovo displeje pro seg7_ctrl |
+
+---
+
+### Komponenta: `phase_counter`
+**Funkce:** DDS fázový akumulátor. Každý hodinový cyklus přičte incr = freq_val × 43 do 32bitového registru. Horních 8 bitů = výstupní fáze. Přesnost: f_out ≈ freq_val × 1,001 Hz (chyba < 0,12 %). freq_val=0 → fáze zmrazena (DC).
+
+| Název signálu | Směr | Datový typ VHDL | Velikost vektoru | Popis signálu |
+|---|---|---|---|---|
+| `clk` | in | std_logic | - | 100 MHz systémové hodiny |
+| `rst` | in | std_logic | - | Synchronní reset — vynuluje akumulátor |
+| `freq_val` | in | std_logic_vector | (13 downto 0) | Cílová frekvence v Hz (0–9999) |
+| `phase` | out | std_logic_vector | (7 downto 0) | Aktuální fáze DDS 0–255 |
+
+---
+
+### Komponenta: `sine_lut`
+**Funkce:** Asynchronní 256položková sinusová ROM. Hodnoty = round(127,5 + 127,5 × sin(2π×i/256)). Rozsah: 0x00 (záp. vrchol) … 0x80 (střed) … 0xFF (kladný vrchol). Výstup je platný ve stejném cyklu jako adresa.
+
+| Název signálu | Směr | Datový typ VHDL | Velikost vektoru | Popis signálu |
+|---|---|---|---|---|
+| `addr` | in | std_logic_vector | (7 downto 0) | Fázová adresa 0–255 |
+| `data_out` | out | std_logic_vector | (7 downto 0) | Amplituda sinusu při dané fázi |
+
+---
+
+### Komponenta: `square_gen`
+**Funkce:** Kombinační obdélníkový průběh se střídou 50 %. phase[7]='1' → 0xFF; phase[7]='0' → 0x00. Nepotřebuje hodiny ani reset.
+
+| Název signálu | Směr | Datový typ VHDL | Velikost vektoru | Popis signálu |
+|---|---|---|---|---|
+| `phase` | in | std_logic_vector | (7 downto 0) | Vstup fáze z phase_counter |
+| `wave_out` | out | std_logic_vector | (7 downto 0) | 0xFF (horní polovina) nebo 0x00 (dolní polovina) |
+
+---
+
+### Komponenta: `sawtooth_gen`
+**Funkce:** Kombinační rostoucí pilovitý průběh. Výstup = přímo fáze (lineární náběh 0→255, okamžitý reset). Nepotřebuje hodiny ani reset.
+
+| Název signálu | Směr | Datový typ VHDL | Velikost vektoru | Popis signálu |
+|---|---|---|---|---|
+| `phase` | in | std_logic_vector | (7 downto 0) | Vstup fáze 0–255 |
+| `wave_out` | out | std_logic_vector | (7 downto 0) | Amplituda pily = fáze |
+
+---
+
+### Komponenta: `triangle_gen`
+**Funkce:** Kombinační trojúhelníkový průběh. phase[7]='0' → výstup roste 0→254; phase[7]='1' → výstup klesá 254→0. Symetrický, bez ostrých hran. Nepotřebuje hodiny ani reset.
+
+| Název signálu | Směr | Datový typ VHDL | Velikost vektoru | Popis signálu |
+|---|---|---|---|---|
+| `phase` | in | std_logic_vector | (7 downto 0) | Vstup fáze z phase_counter |
+| `wave_out` | out | std_logic_vector | (7 downto 0) | Amplituda trojúhelníku 0x00–0xFE–0x00 |
+
+---
+
+### Komponenta: `wave_mux`
+**Funkce:** Kombinační multiplexor 4 na 1. Vybírá jeden 8bitový vzorek průběhu na základě wave_sel. Výchozí (others) → obdélník.
+
+| Název signálu | Směr | Datový typ VHDL | Velikost vektoru | Popis signálu |
+|---|---|---|---|---|
+| `wave_sq` | in | std_logic_vector | (7 downto 0) | Vzorek obdélníkového průběhu |
+| `wave_sin` | in | std_logic_vector | (7 downto 0) | Vzorek sinusového průběhu |
+| `wave_saw` | in | std_logic_vector | (7 downto 0) | Vzorek pilovitého průběhu |
+| `wave_tri` | in | std_logic_vector | (7 downto 0) | Vzorek trojúhelníkového průběhu |
+| `wave_sel` | in | std_logic_vector | (1 downto 0) | 00=SQ  01=SIN  10=SAW  11=TRI |
+| `wave_out` | out | std_logic_vector | (7 downto 0) | Výstup zvoleného průběhu |
+
+---
+
+### Komponenta: `pwm`
+**Funkce:** 8bitová PWM na frekvenci ≈390 kHz (100 MHz÷256). Čítač cykluje 0–255 každou periodu; výstup je HIGH, dokud je čítač < vzorek. Budí RC dolní propust → analogový průběh na konektoru AUX.
+
+| Název signálu | Směr | Datový typ VHDL | Velikost vektoru | Popis signálu |
+|---|---|---|---|---|
+| `clk` | in | std_logic | - | 100 MHz systémové hodiny |
+| `rst` | in | std_logic | - | Synchronní reset aktivní v úrovni High |
+| `sample` | in | std_logic_vector | (7 downto 0) | Střída: 0x00=0%  0x80=50%  0xFF≈100% |
+| `pwm_out` | out | std_logic | - | Výstupní PWM signál (~390 kHz) |
+
+---
+
+### Komponenta: `seg7_ctrl`
+**Funkce:** Časově multiplexovaný řadič pro 8místný 7segmentový displej. Přepíná číslice každou 1 ms (100 000 cyklů) → obnova ~125 Hz na číslici. Formát bajtu: bit[7]=DP, bity[6:0]=segmenty (aktivní v úrovni LOW). Bajt 0=AN0 (zcela vpravo).
+
+| Název signálu | Směr | Datový typ VHDL | Velikost vektoru | Popis signálu |
+|---|---|---|---|---|
+| `clk` | in | std_logic | - | 100 MHz systémové hodiny |
+| `rst` | in | std_logic | - | Synchronní reset aktivní v úrovni High |
+| `disp_data` | in | std_logic_vector | (63 downto 0) | 8×8bitová data displeje (bajt 0=AN0) |
+| `seg` | out | std_logic_vector | (6 downto 0) | {CG,CF,CE,CD,CC,CB,CA} aktivní v úrovni LOW |
+| `dp` | out | std_logic | - | Desetinná tečka, aktivní v úrovni LOW |
+| `an` | out | std_logic_vector | (7 downto 0) | Povolení anod, aktivní vždy jedna v úrovni LOW |
+
+---
+
+### Komponenta: `top (wavegen_top)`
+**Funkce:** Strukturní entita nejvyšší úrovně (Nexys A7-50T). Propojuje všechny podkomponenty. BTNC=reset. SW[0]/SW[1]=režim řízení. SW[2]=povolení AUX+JA. LED udržovány na '0'. AUD_PWM→RC→3,5mm jack. JA[0]=nejvyšší bit průběhu pro osciloskop.
+
+| Název signálu | Směr | Datový typ VHDL | Velikost vektoru | Popis signálu |
+|---|---|---|---|---|
+| `CLK100MHZ` | in | std_logic | - | 100 MHz oscilátor desky |
+| `BTNC` | in | std_logic | - | Střední tlačítko → reset systému |
+| `BTNU` | in | std_logic | - | Tlačítko Nahoru |
+| `BTND` | in | std_logic | - | Tlačítko Dolů |
+| `BTNL` | in | std_logic | - | Tlačítko Vlevo |
+| `BTNR` | in | std_logic | - | Tlačítko Vpravo |
+| `SW` | in | std_logic_vector | (15 downto 0) | Přepínače: [0]=frekv [1]=průběh [2]=AUX pov. |
+| `LED` | out | std_logic_vector | (15 downto 0) | LED diody — nevyužito, trvale na '0' |
+| `SEG` | out | std_logic_vector | (6 downto 0) | Segmenty 7seg displeje (aktivní v úrovni LOW) |
+| `DP` | out | std_logic | - | Desetinná tečka (aktivní v úrovni LOW) |
+| `AN` | out | std_logic_vector | (7 downto 0) | Anody 7seg displeje (aktivní v úrovni LOW) |
+| `AUD_PWM` | out | std_logic | - | PWM audio do AUX jacku (uzavíráno SW[2]) |
+| `AUD_SD` | out | std_logic | - | Povolení audio zesilovače = SW[2] |
+| `JA` | out | std_logic_vector | (7 downto 0) | Pmod: JA[0]=nejvyšší bit průběhu (SW[2]), zbytek '0' |
+
+---
 
 
 ## Popis priebehov
