@@ -26,20 +26,7 @@ DE1_Projekt_uloha2/
 ## 🔧 Architecture Overview
 
 
-
-| Module | Description |
-|---|---|
-| **Clock Enable** | Delenie hodinového signálu na pracovnú frekvenciu |
-| **Debouncer** | Ošetrenie zákmitov tlačidiel (SW debouncing) |
-| **Control Logic** | Riadenie výberu vlnového tvaru | --preklik na simulaciu--
-| **Integrátor** | Čítač/akumulátor – generuje obdĺžnik a trojuholník | --preklik na simulaciu--
-| **Komparátor** | Porovnáva s `up_limit` a `down_limit`, prepína smer integrácie | --preklik na simulaciu--
-| **LUT** | Tabuľka hodnôt pre sínus (DDS princíp) | --preklik na simulaciu--
-| **Tune Switch (MUX)** | Výber medzi obdĺžnikom, píla/trojuholník, sínus – 1 tlačidlo, 3 režimy | --preklik na simulaciu--
-| **Digital Amp** | Digitálne zosilnenie výstupného signálu | --preklik na simulaciu--
-| **DAC** | Výstup na osciloskopu cez Pmod DA2 | --preklik na simulaciu--
-
-# Reference Komponent Generátoru Průběhů (VHDL)
+# Komponenty Generátoru Průběhů (VHDL)
 
 ### Komponenta: `clk_en`
 **Funkce:** Obecný generátor povolení hodin (clock-enable). Generuje jednocyklový pulz každých G_MAX hodinových cyklů. Výchozí G_MAX=1 000 000. Používá se pro ošetření zákmitů (debounce) s G_MAX=200 000 → vzorkování 2 ms při 100 MHz.
