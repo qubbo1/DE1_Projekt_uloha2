@@ -1,0 +1,74 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity tb_sawtooth_gen is
+end tb_sawtooth_gen;
+
+architecture tb of tb_sawtooth_gen is
+
+    component sawtooth_gen
+        port (
+            phase    : in  std_logic_vector(7 downto 0);
+            wave_out : out std_logic_vector(7 downto 0)
+        );
+    end component;
+
+    signal phase    : std_logic_vector(7 downto 0) := (others => '0');
+    signal wave_out : std_logic_vector(7 downto 0);
+
+begin
+
+    -- DUT
+    dut : sawtooth_gen
+        port map (
+            phase    => phase,
+            wave_out => wave_out
+        );
+
+    --------------------------------------------------------------------------
+    -- STIMULI
+    --------------------------------------------------------------------------
+    stimuli : process
+    begin
+        ----------------------------------------------------------------------
+        -- TEST 1: phase = 0
+        ----------------------------------------------------------------------
+        phase <= x"00";
+        wait for 10 ns;
+        assert wave_out = x"00"
+            report "wave_out must equal phase=00" severity error;
+
+        ----------------------------------------------------------------------
+        -- TEST 2: phase = 7F
+        ----------------------------------------------------------------------
+        phase <= x"7F";
+        wait for 10 ns;
+        assert wave_out = x"7F"
+            report "wave_out must equal phase=7F" severity error;
+
+        ----------------------------------------------------------------------
+        -- TEST 3: phase = FF
+        ----------------------------------------------------------------------
+        phase <= x"FF";
+        wait for 10 ns;
+        assert wave_out = x"FF"
+            report "wave_out must equal phase=FF" severity error;
+
+        ----------------------------------------------------------------------
+        -- TEST 4: postupné hodnoty 0–255
+        ----------------------------------------------------------------------
+        for i in 0 to 255 loop
+            phase <= std_logic_vector(to_unsigned(i, 8));
+            wait for 1 ns;
+            assert wave_out = std_logic_vector(to_unsigned(i, 8))
+                report "wave_out must equal phase in sweep loop" severity error;
+        end loop;
+
+        ----------------------------------------------------------------------
+        -- KONEC SIMULACE
+        ----------------------------------------------------------------------
+        wait;
+    end process;
+
+end tb;

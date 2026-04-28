@@ -1,0 +1,89 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity tb_wave_mux is
+end tb_wave_mux;
+
+architecture tb of tb_wave_mux is
+
+    component wave_mux
+        port (
+            wave_sq  : in  std_logic_vector(7 downto 0);
+            wave_sin : in  std_logic_vector(7 downto 0);
+            wave_saw : in  std_logic_vector(7 downto 0);
+            wave_tri : in  std_logic_vector(7 downto 0);
+            wave_sel : in  std_logic_vector(1 downto 0);
+            wave_out : out std_logic_vector(7 downto 0)
+        );
+    end component;
+
+    signal wave_sq  : std_logic_vector(7 downto 0) := x"11";
+    signal wave_sin : std_logic_vector(7 downto 0) := x"22";
+    signal wave_saw : std_logic_vector(7 downto 0) := x"33";
+    signal wave_tri : std_logic_vector(7 downto 0) := x"44";
+    signal wave_sel : std_logic_vector(1 downto 0) := "00";
+    signal wave_out : std_logic_vector(7 downto 0);
+
+begin
+
+    -- DUT
+    dut : wave_mux
+        port map (
+            wave_sq  => wave_sq,
+            wave_sin => wave_sin,
+            wave_saw => wave_saw,
+            wave_tri => wave_tri,
+            wave_sel => wave_sel,
+            wave_out => wave_out
+        );
+
+    --------------------------------------------------------------------------
+    -- STIMULI
+    --------------------------------------------------------------------------
+    stimuli : process
+        variable expected : std_logic_vector(7 downto 0);
+    begin
+        ----------------------------------------------------------------------
+        -- TEST 1: wave_sel = 00 -> square
+        ----------------------------------------------------------------------
+        wave_sel <= "00";
+        wait for 10 ns;
+        expected := wave_sq;
+        assert wave_out = expected
+            report "wave_sel=00 -> expected square" severity error;
+
+        ----------------------------------------------------------------------
+        -- TEST 2: wave_sel = 01 -> sine
+        ----------------------------------------------------------------------
+        wave_sel <= "01";
+        wait for 10 ns;
+        expected := wave_sin;
+        assert wave_out = expected
+            report "wave_sel=01 -> expected sine" severity error;
+
+        ----------------------------------------------------------------------
+        -- TEST 3: wave_sel = 10 -> saw
+        ----------------------------------------------------------------------
+        wave_sel <= "10";
+        wait for 10 ns;
+        expected := wave_saw;
+        assert wave_out = expected
+            report "wave_sel=10 -> expected saw" severity error;
+
+        ----------------------------------------------------------------------
+        -- TEST 4: wave_sel = 11 -> triangle
+        ----------------------------------------------------------------------
+        wave_sel <= "11";
+        wait for 10 ns;
+        expected := wave_tri;
+        assert wave_out = expected
+            report "wave_sel=11 -> expected triangle" severity error;
+
+        ----------------------------------------------------------------------
+        -- END SIMULATION
+        ----------------------------------------------------------------------
+        wait;
+    end process;
+
+end tb;

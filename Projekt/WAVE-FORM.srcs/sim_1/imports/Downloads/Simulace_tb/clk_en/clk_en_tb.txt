@@ -1,0 +1,95 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity tb_clk_en is
+end tb_clk_en;
+
+architecture tb of tb_clk_en is
+
+    -- ZMENŠÍME G_MAX, aby simulace byla rychlá
+    constant G_MAX_TB : positive := 10;
+
+    component clk_en
+        generic (
+            G_MAX : positive := 1_000_000
+        );
+        port (
+            clk : in  std_logic;
+            rst : in  std_logic;
+            ce  : out std_logic
+        );
+    end component;
+
+    signal clk : std_logic := '0';
+    signal rst : std_logic := '0';
+    signal ce  : std_logic;
+
+    constant TbPeriod : time := 10 ns;
+    signal TbSimEnded : std_logic := '0';
+
+begin
+
+    -- DUT s malým G_MAX
+    dut : clk_en
+        generic map (
+            G_MAX => G_MAX_TB
+        )
+        port map (
+            clk => clk,
+            rst => rst,
+            ce  => ce
+        );
+
+    -- Clock
+    clk <= not clk after TbPeriod/2 when TbSimEnded = '0' else '0';
+
+    stimuli : process
+        variable cycle_count : natural := 0;
+    begin
+        --------------------------------------------------------------------
+        -- RESET
+        --------------------------------------------------------------------
+        rst <= '1';
+        wait for 5 * TbPeriod;
+        rst <= '0';
+        wait for TbPeriod;
+
+        --------------------------------------------------------------------
+        -- ČEKÁME NA PRVNÍ PULZ CE
+        --------------------------------------------------------------------
+        cycle_count := 0;
+
+        while ce = '0' loop
+            wait until rising_edge(clk);
+            cycle_count := cycle_count + 1;
+        end loop;
+
+        report "CE pulse detected after " & integer'image(cycle_count) & " cycles";
+
+        --------------------------------------------------------------------
+        -- KONTROLA: CE musí přijít přesně po G_MAX_TB cyklech
+        --------------------------------------------------------------------
+        assert cycle_count = G_MAX_TB
+            report "ERROR: CE pulse came after " &
+                   integer'image(cycle_count) &
+                   " cycles, expected " &
+                   integer'image(G_MAX_TB)
+            severity error;
+
+        --------------------------------------------------------------------
+        -- KONTROLA: CE musí být jednocyklový pulz
+        --------------------------------------------------------------------
+        wait until rising_edge(clk);
+        assert ce = '0'
+            report "ERROR: CE is not a single-cycle pulse"
+            severity error;
+
+        --------------------------------------------------------------------
+        -- KONEC SIMULACE
+        --------------------------------------------------------------------
+        TbSimEnded <= '1';
+        wait;
+    end process;
+
+end tb;

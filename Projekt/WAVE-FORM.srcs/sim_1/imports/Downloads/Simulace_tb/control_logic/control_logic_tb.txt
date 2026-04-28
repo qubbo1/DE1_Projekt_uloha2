@@ -1,0 +1,149 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity tb_control_logic is
+end tb_control_logic;
+
+architecture tb of tb_control_logic is
+
+    component control_logic
+        port (
+            clk       : in  std_logic;
+            rst       : in  std_logic;
+            btn_u     : in  std_logic;
+            btn_d     : in  std_logic;
+            btn_l     : in  std_logic;
+            btn_r     : in  std_logic;
+            sw_freq   : in  std_logic;
+            sw_wave   : in  std_logic;
+            freq_val  : out std_logic_vector (13 downto 0);
+            wave_sel  : out std_logic_vector (1 downto 0);
+            disp_data : out std_logic_vector (63 downto 0)
+        );
+    end component;
+
+    signal clk       : std_logic := '0';
+    signal rst       : std_logic := '0';
+    signal btn_u     : std_logic := '0';
+    signal btn_d     : std_logic := '0';
+    signal btn_l     : std_logic := '0';
+    signal btn_r     : std_logic := '0';
+    signal sw_freq   : std_logic := '0';
+    signal sw_wave   : std_logic := '0';
+    signal freq_val  : std_logic_vector (13 downto 0);
+    signal wave_sel  : std_logic_vector (1 downto 0);
+    signal disp_data : std_logic_vector (63 downto 0);
+
+    constant TbPeriod : time := 10 ns;
+    signal TbSimEnded : std_logic := '0';
+
+begin
+
+    -- DUT
+    dut : control_logic
+        port map (
+            clk       => clk,
+            rst       => rst,
+            btn_u     => btn_u,
+            btn_d     => btn_d,
+            btn_l     => btn_l,
+            btn_r     => btn_r,
+            sw_freq   => sw_freq,
+            sw_wave   => sw_wave,
+            freq_val  => freq_val,
+            wave_sel  => wave_sel,
+            disp_data => disp_data
+        );
+
+    -- Clock
+    clk <= not clk after TbPeriod/2 when TbSimEnded = '0' else '0';
+
+    --------------------------------------------------------------------------
+    -- Pomocná procedura pro jednocyklový pulz tlačítka
+    --------------------------------------------------------------------------
+    procedure pulse(signal s : out std_logic) is
+    begin
+        s <= '1';
+        wait until rising_edge(clk);
+        s <= '0';
+    end procedure;
+
+    --------------------------------------------------------------------------
+    -- STIMULI
+    --------------------------------------------------------------------------
+    stimuli : process
+    begin
+        ----------------------------------------------------------------------
+        -- RESET
+        ----------------------------------------------------------------------
+        rst <= '1';
+        wait for 5 * TbPeriod;
+        rst <= '0';
+        wait for 5 * TbPeriod;
+
+        ----------------------------------------------------------------------
+        -- TEST 1: Režim frekvence (sw_freq=1)
+        ----------------------------------------------------------------------
+        sw_freq <= '1';
+        sw_wave <= '0';
+
+        -- Očekáváme počáteční hodnotu 0001
+        wait until rising_edge(clk);
+        assert freq_val = to_stdlogicvector(to_unsigned(1,14))
+            report "Initial freq_val should be 1" severity error;
+
+        -- Zvýšení jednotek (cursor=00)
+        pulse(btn_u);
+        wait until rising_edge(clk);
+        assert freq_val = to_stdlogicvector(to_unsigned(2,14))
+            report "freq_val should be 2 after btn_u" severity error;
+
+        -- Posun kurzoru doprava (cursor=01)
+        pulse(btn_r);
+        wait until rising_edge(clk);
+
+        -- Zvýšení desítek
+        pulse(btn_u);
+        wait until rising_edge(clk);
+        assert freq_val = to_stdlogicvector(to_unsigned(12,14))
+            report "freq_val should be 12 after incrementing tens" severity error;
+
+        ----------------------------------------------------------------------
+        -- TEST 2: Režim vlnového tvaru (sw_wave=1)
+        ----------------------------------------------------------------------
+        sw_freq <= '0';
+        sw_wave <= '1';
+
+        -- wave_sel = 00 → 01
+        pulse(btn_u);
+        wait until rising_edge(clk);
+        assert wave_sel = "01"
+            report "wave_sel should be 01" severity error;
+
+        -- wave_sel = 01 → 10
+        pulse(btn_u);
+        wait until rising_edge(clk);
+        assert wave_sel = "10"
+            report "wave_sel should be 10" severity error;
+
+        -- wave_sel = 10 → 11
+        pulse(btn_u);
+        wait until rising_edge(clk);
+        assert wave_sel = "11"
+            report "wave_sel should be 11" severity error;
+
+        -- wave_sel = 11 → 00 (wrap)
+        pulse(btn_u);
+        wait until rising_edge(clk);
+        assert wave_sel = "00"
+            report "wave_sel should wrap to 00" severity error;
+
+        ----------------------------------------------------------------------
+        -- KONEC SIMULACE
+        ----------------------------------------------------------------------
+        TbSimEnded <= '1';
+        wait;
+    end process;
+
+end tb;

@@ -1,0 +1,70 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity tb_sine_lut is
+end tb_sine_lut;
+
+architecture tb of tb_sine_lut is
+
+    component sine_lut
+        port (
+            addr     : in  std_logic_vector(7 downto 0);
+            data_out : out std_logic_vector(7 downto 0)
+        );
+    end component;
+
+    signal addr     : std_logic_vector(7 downto 0) := (others => '0');
+    signal data_out : std_logic_vector(7 downto 0);
+
+begin
+
+    -- DUT
+    dut : sine_lut
+        port map (
+            addr     => addr,
+            data_out => data_out
+        );
+
+    --------------------------------------------------------------------------
+    -- STIMULI
+    --------------------------------------------------------------------------
+    stimuli : process
+    begin
+        ----------------------------------------------------------------------
+        -- TEST 1: ruční adresy
+        ----------------------------------------------------------------------
+        addr <= x"00"; wait for 10 ns;
+        report "addr=00, data_out=" &
+               integer'image(to_integer(unsigned(data_out)));
+
+        addr <= x"40"; wait for 10 ns;
+        report "addr=40, data_out=" &
+               integer'image(to_integer(unsigned(data_out)));
+
+        addr <= x"80"; wait for 10 ns;
+        report "addr=80, data_out=" &
+               integer'image(to_integer(unsigned(data_out)));
+
+        addr <= x"C0"; wait for 10 ns;
+        report "addr=C0, data_out=" &
+               integer'image(to_integer(unsigned(data_out)));
+
+        ----------------------------------------------------------------------
+        -- TEST 2: kompletní průchod LUT 0–255
+        ----------------------------------------------------------------------
+        for i in 0 to 255 loop
+            addr <= std_logic_vector(to_unsigned(i, 8));
+            wait for 1 ns;
+
+            report "LUT[" & integer'image(i) & "] = " &
+                   integer'image(to_integer(unsigned(data_out)));
+        end loop;
+
+        ----------------------------------------------------------------------
+        -- KONEC SIMULACE
+        ----------------------------------------------------------------------
+        wait;
+    end process;
+
+end tb;

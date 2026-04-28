@@ -1,0 +1,108 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity tb_triangle_gen is
+end tb_triangle_gen;
+
+architecture tb of tb_triangle_gen is
+
+    component triangle_gen
+        port (
+            phase    : in  std_logic_vector(7 downto 0);
+            wave_out : out std_logic_vector(7 downto 0)
+        );
+    end component;
+
+    signal phase    : std_logic_vector(7 downto 0) := (others => '0');
+    signal wave_out : std_logic_vector(7 downto 0);
+
+begin
+
+    -- DUT
+    dut : triangle_gen
+        port map (
+            phase    => phase,
+            wave_out => wave_out
+        );
+
+    --------------------------------------------------------------------------
+    -- STIMULI
+    --------------------------------------------------------------------------
+    stimuli : process
+        variable expected : std_logic_vector(7 downto 0);
+        variable p        : integer;
+        variable val      : integer;
+    begin
+        ----------------------------------------------------------------------
+        -- TEST 1: phase = 00 -> expected 0
+        ----------------------------------------------------------------------
+        phase <= x"00";
+        wait for 10 ns;
+        expected := x"00";
+        assert wave_out = expected
+            report "phase=00 -> expected 0" severity error;
+
+        ----------------------------------------------------------------------
+        -- TEST 2: phase = 40 (64) -> expected 128
+        ----------------------------------------------------------------------
+        phase <= x"40";
+        wait for 10 ns;
+        expected := std_logic_vector(to_unsigned(128, 8));
+        assert wave_out = expected
+            report "phase=64 -> expected 128" severity error;
+
+        ----------------------------------------------------------------------
+        -- TEST 3: phase = 7F (127) -> expected 254
+        ----------------------------------------------------------------------
+        phase <= x"7F";
+        wait for 10 ns;
+        expected := std_logic_vector(to_unsigned(254, 8));
+        assert wave_out = expected
+            report "phase=127 -> expected 254" severity error;
+
+        ----------------------------------------------------------------------
+        -- TEST 4: phase = 80 (128) -> expected 254
+        ----------------------------------------------------------------------
+        phase <= x"80";
+        wait for 10 ns;
+        expected := std_logic_vector(to_unsigned(254, 8));
+        assert wave_out = expected
+            report "phase=128 -> expected 254" severity error;
+
+        ----------------------------------------------------------------------
+        -- TEST 5: phase = C0 (192) -> expected 128
+        ----------------------------------------------------------------------
+        phase <= x"C0";
+        wait for 10 ns;
+        expected := std_logic_vector(to_unsigned(128, 8));
+        assert wave_out = expected
+            report "phase=192 -> expected 128" severity error;
+
+        ----------------------------------------------------------------------
+        -- TEST 6: full sweep 0 to 255
+        ----------------------------------------------------------------------
+        for p in 0 to 255 loop
+            phase <= std_logic_vector(to_unsigned(p, 8));
+            wait for 1 ns;
+
+            if p < 128 then
+                val := p * 2;
+            else
+                val := (255 - p) * 2;
+            end if;
+
+            expected := std_logic_vector(to_unsigned(val, 8));
+
+            assert wave_out = expected
+                report "Mismatch at phase=" & integer'image(p)
+                severity error;
+        end loop;
+
+        ----------------------------------------------------------------------
+        -- END SIMULATION
+        ----------------------------------------------------------------------
+        wait;
+    end process;
+
+end tb;
