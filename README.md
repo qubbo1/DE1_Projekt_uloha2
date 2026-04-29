@@ -208,6 +208,8 @@ DE1_Projekt_uloha2/
 
 ## Simulácie
 
+### : wave_mux
+
 Simulace ukazuje funkci komponenty **multiplexor 4 na 1** (`wave_mux`). Dvoubitový řídicí signál (`wave_sel`) řídí výběr průběhu, který se následně zobrazí na osmibitovém výstupu.
 
 * Když `wave_sel` = **`00`**, výstup je `wave_sq` (`00010001`).
@@ -220,6 +222,7 @@ Simulace ukazuje funkci komponenty **multiplexor 4 na 1** (`wave_mux`). Dvoubito
 <br>
 <br>
 
+### : pwm
 Simulace ukazuje funkci komponenty **generátor PWM (pulzně šířkové modulace)**. Vnitřní 8bitový čítač (`cnt`) plynule inkrementuje a jeho hodnota se porovnává s 8bitovým vstupem (`sample`), čímž se řídí střída (duty cycle) výstupního signálu (`pwm_out`):
 
 * Když `sample` = **`00000000`** (0 %), výstup `pwm_out` zůstává trvale v logické `0`.
@@ -232,6 +235,7 @@ Simulace ukazuje funkci komponenty **generátor PWM (pulzně šířkové modulac
 <br>
 <br>
 
+### : control_logic
 Simulace ukazuje funkci komponenty **control logic (uživatelského rozhraní)**. Tato komponenta reaguje na stav přepínačů a stisky tlačítek pro úpravu nastavení:
 
 * **Režim nastavení frekvence:** Pokud přepínač `sw_freq` = `1`, stisk tlačítek (`btn_u`, `btn_r`) postupně zvyšuje hodnotu frekvence (`freq_val`). Současně se odpovídajícím způsobem aktualizují výstupní data pro displej (`disp_data`).
@@ -242,6 +246,7 @@ Simulace ukazuje funkci komponenty **control logic (uživatelského rozhraní)**
 <br>
 <br>
 
+### : seg7_ctrl
 Simulace ukazuje funkci komponenty **řadiče 7segmentového displeje**. Modul zpracovává 64bitový datový vstup `disp_data` (který typicky obsahuje data pro 8 číslic, 8 bitů na číslici) a generuje výstupní signály pro multiplexní řízení fyzického displeje:
 
 * Po počátečním resetu (signál `rst` přejde z `1` do logické `0`) modul začne zpracovávat vstupní hodnoty.
@@ -254,6 +259,7 @@ Simulace ukazuje funkci komponenty **řadiče 7segmentového displeje**. Modul z
 <br>
 <br>
 
+### : sawtooth_gen
 Simulace ukazuje funkci komponenty **generátor pilovitého průběhu (sawtooth)**. Tento modul vytváří výstupní signál na základě přímé závislosti na vstupní fázi.
 
 * Osmibitový výstupní signál `wave_out` po celou dobu přesně kopíruje hodnotu vstupního signálu `phase`.
@@ -266,6 +272,7 @@ Simulace ukazuje funkci komponenty **generátor pilovitého průběhu (sawtooth)
 <br>
 <br>
 
+### : sine_gen
 Simulace ukazuje funkci komponenty **generátor sinusového průběhu (sine wave ROM/LUT)**. Tento modul funguje jako vyhledávací tabulka, která převádí vstupní fázi na hodnotu amplitudy.
 
 * Modul zpracovává osmibitový vstup `addr` (reprezentující fázi) a na výstup `data_out` posílá odpovídající předpočítanou osmibitovou hodnotu.
@@ -277,6 +284,7 @@ Simulace ukazuje funkci komponenty **generátor sinusového průběhu (sine wave
 <br>
 <br>
 
+### : square_gen
 Simulace ukazuje funkci komponenty **generátor obdélníkového průběhu (square wave)**. Tento modul generuje dvoustavový výstupní signál vyhodnocením nejvyššího bitu (MSB) vstupní fáze.
 
 * Osmibitový výstupní signál `wave_out` nabývá pouze dvou krajních hodnot (`00000000` nebo `11111111`) v přímé závislosti na hodnotě vstupního signálu `phase`.
@@ -288,6 +296,7 @@ Simulace ukazuje funkci komponenty **generátor obdélníkového průběhu (squa
 <br>
 <br>
 
+### : triangle_gen
 Simulace ukazuje funkci komponenty **generátor trojúhelníkového průběhu (triangle wave)**. Tento modul vytváří symetrický signál, který v první polovině periody lineárně roste a ve druhé polovině lineárně klesá.
 
 * Modul využívá pomocný 7bitový vnitřní signál `lower7`, který obsahuje spodních 7 bitů vstupní fáze.
@@ -300,6 +309,7 @@ Simulace ukazuje funkci komponenty **generátor trojúhelníkového průběhu (t
 <br>
 <br>
 
+### : clk_en
 Simulace ukazuje funkci komponenty **BCD čítač**. Tento modul slouží k cyklickému počítání od nuly do devíti a často se využívá jako základ pro generování časových základen nebo multiplexování displeje.
 
 * Na začátku časové osy je zachycen aktivní signál reset (`rst = 1`), který bezpečně drží hodnotu čítače `cnt` na výchozí nule.
