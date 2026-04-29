@@ -7,6 +7,7 @@
 ### [Popis priebehov](https://github.com/qubbo1/DE1_Projekt_uloha2#popis-priebehov-1)
 ### [Ovladanie](https://github.com/qubbo1/DE1_Projekt_uloha2#ovladanie-1)
 ### [Simulácie](https://github.com/qubbo1/DE1_Projekt_uloha2#simul%C3%A1cie-1)
+### [Blokové Schéma](https://github.com/qubbo1/DE1_Projekt_uloha2#blokov%C3%A1-sch%C3%A9ma)
 
 ---
 ## Štruktúra projektu
