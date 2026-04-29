@@ -212,7 +212,8 @@ Simulace ukazuje funkci komponenty **multiplexor 4 na 1** (`wave_mux`). Dvoubito
 * Když `wave_sel` = **`10`**, výstup je `wave_saw` (`00110011`).
 * Když `wave_sel` = **`11`**, výstup je `wave_tri` (`01000100`).
 
-Projekt/WAVE-FORM.srcs/sim_1/imports/Downloads/Simulace_tb/wave_mux/Snímek obrazovky 2026-04-28 184050.png
+<img width="1425" height="181" alt="image" src="https://github.com/user-attachments/assets/9a22249c-8c49-4ac9-9d68-ce0fbc7f7b20" />
+
 
 Simulace ukazuje funkci komponenty **generátor PWM (pulzně šířkové modulace)**. Vnitřní 8bitový čítač (`cnt`) plynule inkrementuje a jeho hodnota se porovnává s 8bitovým vstupem (`sample`), čímž se řídí střída (duty cycle) výstupního signálu (`pwm_out`):
 * Když je `sample` **`00000000`** (0 %), výstup `pwm_out` zůstává trvale v logické `0`.
@@ -220,14 +221,14 @@ Simulace ukazuje funkci komponenty **generátor PWM (pulzně šířkové modulac
 * Když je `sample` **`11001000`** (odpovídá cca 78 %), výstup `pwm_out` generuje úměrně širší impulz.
 * Když je `sample` **`11111111`** (odpovídá cca 100 %), výstup `pwm_out` zůstává téměř po celou periodu v logické `1`.
 
-Projekt/WAVE-FORM.srcs/sim_1/imports/Downloads/Simulace_tb/PWM/Snímek obrazovky 2026-04-28 134637.png
+<img width="1424" height="297" alt="image" src="https://github.com/user-attachments/assets/493d4fbf-c2ef-454c-a500-c05ecc4772e6" />
+
 
 Simulace ukazuje ukazuje funkci komponenty (uživatelské rozhraní), který reaguje na vstupy z přepínačů a tlačítek pro změnu nastavení:
 * **Režim nastavení frekvence:** Když je přepínač `sw_freq` v logické `1`, stisknutí tlačítek (`btn_u`, `btn_r`) zvyšuje hodnotu frekvence (`freq_val`) z 1 na 2 a poté na 12 (v binárním zobrazení). Spolu s tím se adekvátně aktualizují výstupní data pro displej (`disp_data`).
 * **Režim výběru typu vlny:** Když je následně aktivován přepínač `sw_wave` (logická `1`), každé stisknutí tlačítka `btn_u` správně a cyklicky inkrementuje dvoubitový signál pro výběr vlny (`wave_sel`) přes všechny jeho stavy (`00` → `01` → `10` → `11` → `00`).
 
-<img width="1436" height="272" alt="image" src="https://github.com/user-attachments/assets/ce9d5650-1421-44be-97ff-7dfc428982dd" />
-
+<img width="1424" height="297" alt="image" src="https://github.com/user-attachments/assets/45c94c85-6464-48ae-9617-bfc88f62e8f6" />
 
 ## Bloková Schéma
 
