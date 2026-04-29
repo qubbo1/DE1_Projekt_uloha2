@@ -24,6 +24,10 @@ DE1_Projekt_uloha2/
 └── constraints/
     └── nexys_a7_50t.xdc      ← Pin constraints
 ```
+## Bloková Schéma
+
+![Screenshot](./imgs/schemaV1.5.png)
+
 ##  Architecture Overview
 
 
