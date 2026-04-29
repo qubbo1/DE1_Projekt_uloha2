@@ -24,7 +24,7 @@ DE1_Projekt_uloha2/
 └── constraints/
     └── nexys_a7_50t.xdc      ← Pin constraints
 ```
-## 🔧 Architecture Overview
+##  Architecture Overview
 
 
 # Komponenty Generátoru Průběhů (VHDL)
