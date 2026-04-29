@@ -226,7 +226,8 @@ Simulace ukazuje ukazuje funkci komponenty (uživatelské rozhraní), který rea
 * **Režim nastavení frekvence:** Když je přepínač `sw_freq` v logické `1`, stisknutí tlačítek (`btn_u`, `btn_r`) zvyšuje hodnotu frekvence (`freq_val`) z 1 na 2 a poté na 12 (v binárním zobrazení). Spolu s tím se adekvátně aktualizují výstupní data pro displej (`disp_data`).
 * **Režim výběru typu vlny:** Když je následně aktivován přepínač `sw_wave` (logická `1`), každé stisknutí tlačítka `btn_u` správně a cyklicky inkrementuje dvoubitový signál pro výběr vlny (`wave_sel`) přes všechny jeho stavy (`00` → `01` → `10` → `11` → `00`).
 
-Projekt/WAVE-FORM.srcs/sim_1/imports/Downloads/Simulace_tb/control_logic/Snímek obrazovky 2026-04-28 132340.png
+<img width="1436" height="272" alt="image" src="https://github.com/user-attachments/assets/ce9d5650-1421-44be-97ff-7dfc428982dd" />
+
 
 ## Bloková Schéma
 
