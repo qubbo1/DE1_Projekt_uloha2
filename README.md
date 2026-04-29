@@ -208,7 +208,7 @@ DE1_Projekt_uloha2/
 
 ## Simulácie
 
-### : wave_mux
+### wave_mux
 
 Simulace ukazuje funkci komponenty **multiplexor 4 na 1** (`wave_mux`). Dvoubitový řídicí signál (`wave_sel`) řídí výběr průběhu, který se následně zobrazí na osmibitovém výstupu.
 
@@ -284,7 +284,7 @@ Simulace ukazuje funkci komponenty **generátor sinusového průběhu (sine wave
 <br>
 <br>
 
-### *square_gen*
+### square_gen
 Simulace ukazuje funkci komponenty **generátor obdélníkového průběhu (square wave)**. Tento modul generuje dvoustavový výstupní signál vyhodnocením nejvyššího bitu (MSB) vstupní fáze.
 
 * Osmibitový výstupní signál `wave_out` nabývá pouze dvou krajních hodnot (`00000000` nebo `11111111`) v přímé závislosti na hodnotě vstupního signálu `phase`.
@@ -296,7 +296,7 @@ Simulace ukazuje funkci komponenty **generátor obdélníkového průběhu (squa
 <br>
 <br>
 
-### : triangle_gen
+### triangle_gen
 Simulace ukazuje funkci komponenty **generátor trojúhelníkového průběhu (triangle wave)**. Tento modul vytváří symetrický signál, který v první polovině periody lineárně roste a ve druhé polovině lineárně klesá.
 
 * Modul využívá pomocný 7bitový vnitřní signál `lower7`, který obsahuje spodních 7 bitů vstupní fáze.
@@ -309,7 +309,7 @@ Simulace ukazuje funkci komponenty **generátor trojúhelníkového průběhu (t
 <br>
 <br>
 
-### : clk_en
+### clk_en
 Simulace ukazuje funkci komponenty **BCD čítač**. Tento modul slouží k cyklickému počítání od nuly do devíti a často se využívá jako základ pro generování časových základen nebo multiplexování displeje.
 
 * Na začátku časové osy je zachycen aktivní signál reset (`rst = 1`), který bezpečně drží hodnotu čítače `cnt` na výchozí nule.
