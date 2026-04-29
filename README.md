@@ -231,10 +231,10 @@ Simulace ukazuje funkci komponenty **generátor PWM (pulzně šířkové modulac
 <br>
 <br>
 
-Simulace ukazuje funkci komponenty (uživatelského rozhraní), která reaguje na vstupy z přepínačů a tlačítek pro změnu nastavení:
+Simulace funkci komponenty **control logic (uživatelského rozhraní)**. Tato komponenta reaguje na stav přepínačů a stisky tlačítek pro úpravu nastavení:
 
-* **Režim nastavení frekvence:** Když je přepínač `sw_freq` v logické `1`, stisknutí tlačítek (`btn_u`, `btn_r`) zvyšuje hodnotu frekvence (`freq_val`) z 1 na 2 a poté na 12 (v binárním zobrazení). Spolu s tím se adekvátně aktualizují výstupní data pro displej (`disp_data`).
-* **Režim výběru typu vlny:** Když je následně aktivován přepínač `sw_wave` (logická `1`), každé stisknutí tlačítka `btn_u` správně a cyklicky inkrementuje dvoubitový signál pro výběr vlny (`wave_sel`) přes všechny jeho stavy (`00` → `01` → `10` → `11` → `00`).
+* **Režim nastavení frekvence:** Pokud přepínač `sw_freq` = `1`, stisk tlačítek (`btn_u`, `btn_r`) postupně zvyšuje hodnotu frekvence (`freq_val`). Současně se odpovídajícím způsobem aktualizují výstupní data pro displej (`disp_data`).
+* **Režim výběru typu vlny:** Je-li aktivován přepínač `sw_wave` = `1`, každé stisknutí tlačítka `btn_u` ovládá dvoubitový řídicí signál (`wave_sel`). Ten tak postupně prochází přes všechny své stavy (`00` → `01` → `10` → `11` → `00`).
 
 <img width="1424" height="297" alt="image" src="https://github.com/user-attachments/assets/45c94c85-6464-48ae-9617-bfc88f62e8f6" />
 
