@@ -205,29 +205,28 @@ DE1_Projekt_uloha2/
 | `BTNC`      | –           | Systémový reset                  |
 | `SW(2)`     | –           | Povolenie AUX výstupu            |
 
-
-
-
-
-
-## PWM výstup
-
-**Pin:** `JA[0]` (Pmod JA, pin 1)
-
-Pre analógový výstup pridáme RC dolnopriepustný filter:
-
-(EXPERIMENTÁLNE)
-
-```
-JA[0] ──┤ R=1kΩ ├──┬── Výstup (osciloskop / DAC)
-                   │
-                 C=100nF
-                   │
-                  GND
-```
 ## Simulácie
+Simulace ukazuje funkci komponenty **multiplexor 4 na 1** (`wave_mux`). Dvoubitový řídicí signál (`wave_sel`) řídí výběr průběhu, který se následně zobrazí na osmibitovém výstupu.
+* Když `wave_sel` = **`00`**, výstup je `wave_sq` (`00010001`).
+* Když `wave_sel` = **`01`**, výstup je `wave_sin` (`00100010`).
+* Když `wave_sel` = **`10`**, výstup je `wave_saw` (`00110011`).
+* Když `wave_sel` = **`11`**, výstup je `wave_tri` (`01000100`).
 
+Projekt/WAVE-FORM.srcs/sim_1/imports/Downloads/Simulace_tb/wave_mux/Snímek obrazovky 2026-04-28 184050.png
 
+Simulace ukazuje funkci komponenty **generátor PWM (pulzně šířkové modulace)**. Vnitřní 8bitový čítač (`cnt`) plynule inkrementuje a jeho hodnota se porovnává s 8bitovým vstupem (`sample`), čímž se řídí střída (duty cycle) výstupního signálu (`pwm_out`):
+* Když je `sample` **`00000000`** (0 %), výstup `pwm_out` zůstává trvale v logické `0`.
+* Když je `sample` **`10000000`** (odpovídá 50 %), výstup `pwm_out` má střídu 50 % (polovinu času `1`, polovinu `0`).
+* Když je `sample` **`11001000`** (odpovídá cca 78 %), výstup `pwm_out` generuje úměrně širší impulz.
+* Když je `sample` **`11111111`** (odpovídá cca 100 %), výstup `pwm_out` zůstává téměř po celou periodu v logické `1`.
+
+Projekt/WAVE-FORM.srcs/sim_1/imports/Downloads/Simulace_tb/PWM/Snímek obrazovky 2026-04-28 134637.png
+
+Simulace ukazuje ukazuje funkci komponenty (uživatelské rozhraní), který reaguje na vstupy z přepínačů a tlačítek pro změnu nastavení:
+* **Režim nastavení frekvence:** Když je přepínač `sw_freq` v logické `1`, stisknutí tlačítek (`btn_u`, `btn_r`) zvyšuje hodnotu frekvence (`freq_val`) z 1 na 2 a poté na 12 (v binárním zobrazení). Spolu s tím se adekvátně aktualizují výstupní data pro displej (`disp_data`).
+* **Režim výběru typu vlny:** Když je následně aktivován přepínač `sw_wave` (logická `1`), každé stisknutí tlačítka `btn_u` správně a cyklicky inkrementuje dvoubitový signál pro výběr vlny (`wave_sel`) přes všechny jeho stavy (`00` → `01` → `10` → `11` → `00`).
+
+Projekt/WAVE-FORM.srcs/sim_1/imports/Downloads/Simulace_tb/control_logic/Snímek obrazovky 2026-04-28 132340.png
 
 ## Bloková Schéma
 
