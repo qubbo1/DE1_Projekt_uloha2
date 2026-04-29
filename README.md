@@ -323,8 +323,6 @@ Simulace ukazuje funkci komponenty **BCD čítač**. Tento modul slouží k cykl
 
 <img width="1424" height="258" alt="image" src="https://github.com/user-attachments/assets/106adb76-3a23-4b64-85cd-9326c012b8b4" />
 
-## Bloková Schéma
 
-![Screenshot](./imgs/schemaV1.5.png)
 
 
