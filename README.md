@@ -212,18 +212,18 @@ Simulace ukazuje funkci komponenty **multiplexor 4 na 1** (`wave_mux`). Dvoubito
 * Když `wave_sel` = **`10`**, výstup je `wave_saw` (`00110011`).
 * Když `wave_sel` = **`11`**, výstup je `wave_tri` (`01000100`).
 <img width="1425" height="181" alt="image" src="https://github.com/user-attachments/assets/9a22249c-8c49-4ac9-9d68-ce0fbc7f7b20" />
--
--
--
+<br>
+<br>
+<br>
 Simulace ukazuje funkci komponenty **generátor PWM (pulzně šířkové modulace)**. Vnitřní 8bitový čítač (`cnt`) plynule inkrementuje a jeho hodnota se porovnává s 8bitovým vstupem (`sample`), čímž se řídí střída (duty cycle) výstupního signálu (`pwm_out`):
 * Když `sample` = **`00000000`** (0 %), výstup `pwm_out` zůstává trvale v logické `0`.
 * Když `sample` = **`10000000`** (odpovídá 50 %), výstup `pwm_out` má střídu 50 % (polovinu času `1`, polovinu `0`).
 * Když `sample` = **`11001000`** (odpovídá cca 78 %), výstup `pwm_out` generuje úměrně širší impulz.
 * Když `sample` = **`11111111`** (odpovídá cca 100 %), výstup `pwm_out` zůstává téměř po celou periodu v logické `1`.
 <img width="1425" height="373" alt="image" src="https://github.com/user-attachments/assets/6b6edf20-1d3d-4219-af60-d8c57cd7a7d8" />
--
--
--
+<br>
+<br>
+<br>
 Simulace ukazuje ukazuje funkci komponenty (uživatelské rozhraní), který reaguje na vstupy z přepínačů a tlačítek pro změnu nastavení:
 * **Režim nastavení frekvence:** Když je přepínač `sw_freq` v logické `1`, stisknutí tlačítek (`btn_u`, `btn_r`) zvyšuje hodnotu frekvence (`freq_val`) z 1 na 2 a poté na 12 (v binárním zobrazení). Spolu s tím se adekvátně aktualizují výstupní data pro displej (`disp_data`).
 * **Režim výběru typu vlny:** Když je následně aktivován přepínač `sw_wave` (logická `1`), každé stisknutí tlačítka `btn_u` správně a cyklicky inkrementuje dvoubitový signál pro výběr vlny (`wave_sel`) přes všechny jeho stavy (`00` → `01` → `10` → `11` → `00`).
