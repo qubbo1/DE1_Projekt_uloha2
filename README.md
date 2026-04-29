@@ -250,6 +250,64 @@ Simulace ukazuje funkci komponenty **řadiče 7segmentového displeje**. Modul z
 
 <img width="1421" height="155" alt="image" src="https://github.com/user-attachments/assets/51ad2811-052d-463b-81a5-a997dd883052" />
 
+<br>
+<br>
+
+Simulace ukazuje funkci komponenty **generátor pilovitého průběhu (sawtooth)**. Tento modul vytváří výstupní signál na základě přímé závislosti na vstupní fázi.
+
+* Osmibitový výstupní signál `wave_out` po celou dobu přesně kopíruje hodnotu vstupního signálu `phase`.
+* V první části simulace fáze skokově nabývá hodnot `00000000`, následně `01111111` a poté `11111111`.
+* V druhé části časové osy (přibližně od času 29,000,000) začne hodnota rychle a plynule růst. 
+* Rozbalený detail signálu `wave_out` jasně ukazuje, že jednotlivé bity (`[0]` až `[7]`) fungují jako klasický binární čítač. Nejnižší bit (`[0]`) přepíná nejrychleji, zatímco vyšší bity úměrně pomaleji, což ve výsledku reprezentuje lineárně rostoucí (pilovitou) hodnotu.
+
+<img width="1424" height="257" alt="image" src="https://github.com/user-attachments/assets/c4b3ff15-3727-4a02-b201-65fc7dc0893d" />
+
+<br>
+<br>
+
+Simulace ukazuje funkci komponenty **generátor sinusového průběhu (sine wave ROM/LUT)**. Tento modul funguje jako vyhledávací tabulka, která převádí vstupní fázi na hodnotu amplitudy.
+
+* Modul zpracovává osmibitový vstup `addr` (reprezentující fázi) a na výstup `data_out` posílá odpovídající předpočítanou osmibitovou hodnotu.
+* V první části simulace jsou jasně vidět klíčové body sinusovky: při počáteční adrese `00000000` je výstup přesně v polovině rozsahu (`10000000`), při adrese `01000000` (čtvrtina periody) dosahuje výstup maxima (`11111111`), při `10000000` (polovina periody) se vrací do středu (`10000000`) a při `11000000` (tři čtvrtiny periody) nabývá minima (`00000000`).
+* V druhé části časové osy (přibližně od času 36,000,000) začne adresa plynule růst, což na rozbalených bitech signálu `data_out` generuje plynulou digitální reprezentaci celého sinusového průběhu.
+
+<img width="1429" height="256" alt="image" src="https://github.com/user-attachments/assets/fe3d60e9-2618-48f4-9891-f268aa5253d9" />
+
+<br>
+<br>
+
+Simulace ukazuje funkci komponenty **generátor obdélníkového průběhu (square wave)**. Tento modul generuje dvoustavový výstupní signál vyhodnocením nejvyššího bitu (MSB) vstupní fáze.
+
+* Osmibitový výstupní signál `wave_out` nabývá pouze dvou krajních hodnot (`00000000` nebo `11111111`) v přímé závislosti na hodnotě vstupního signálu `phase`.
+* V první části simulace je zřejmé, že pokud je hodnota fáze v první polovině svého rozsahu (např. `00000000` a `01111111`), výstup zůstává na minimu (`00000000`). Při dosažení a překročení poloviny rozsahu (hodnoty `10000000` a `11111111`) se výstup skokově mění na maximum (`11111111`).
+* V dynamické části na konci časové osy (přibližně od času 38,000,000), kdy se hodnota fáze začne plynule inkrementovat jako čítač, rozbalený detail signálu `phase` potvrzuje princip fungování. Přepínání celého výstupního signálu `wave_out` přesně kopíruje stav nejvyššího bitu fáze (`[7]`), což ve výsledku tvoří čistý obdélníkový průběh.
+
+<img width="1426" height="264" alt="image" src="https://github.com/user-attachments/assets/1df515aa-dde1-4ef1-b014-3a9b803c1534" />
+
+<br>
+<br>
+
+Simulace ukazuje funkci komponenty **generátor trojúhelníkového průběhu (triangle wave)**. Tento modul vytváří symetrický signál, který v první polovině periody lineárně roste a ve druhé polovině lineárně klesá.
+
+* Modul využívá pomocný 7bitový vnitřní signál `lower7`, který obsahuje spodních 7 bitů vstupní fáze.
+* V první polovině rozsahu fáze (když je nejvyšší bit fáze `0`, například při hodnotách `00000000` až `01111111`) hodnota výstupního signálu `wave_out` úměrně roste od nuly až k maximu.
+* Jakmile fáze překročí polovinu svého rozsahu (nejvyšší bit se změní na `1`, například při `10000000`), směr se obrátí a výstupní signál `wave_out` začne z hodnoty maxima (`11111111`) opět postupně klesat.
+* V pravé části časové osy, kde je fáze plynule inkrementována, ukazuje rozbalený detail signálu `wave_out` jasný obrat směru čítání. Jednotlivé bity (`[0]` až `[7]`) přestanou růst jako standardní binární čítač a začnou se přepínat v opačném pořadí, čímž formují sestupnou hranu trojúhelníkového signálu.
+
+<img width="1427" height="272" alt="image" src="https://github.com/user-attachments/assets/82e448f7-8081-432d-a16b-1fb732b0dee9" />
+
+<br>
+<br>
+
+Simulace ukazuje funkci komponenty **BCD čítač**. Tento modul slouží k cyklickému počítání od nuly do devíti a často se využívá jako základ pro generování časových základen nebo multiplexování displeje.
+
+* Na začátku časové osy je zachycen aktivní signál reset (`rst = 1`), který bezpečně drží hodnotu čítače `cnt` na výchozí nule.
+* Jakmile reset klesne do neaktivní úrovně (`rst = 0`), začne sběrnice `cnt` s každým hodinovým taktem `clk` synchronně inkrementovat svou hodnotu.
+* Průběh zřetelně ukazuje počítání v binárním formátu (zobrazeno bez úvodních nul) postupně od `1` přes `10`, `11` až po `1001`, což odpovídá dekadické hodnotě 9.
+* Po dosažení hraniční hodnoty `1001` nepokračuje čítač na 10, ale v následujícím hodinovém taktu se automaticky vynuluje zpět na `0` a celý cyklus se opakuje. Rozbalené bity `[0]` až `[3]` ve spodní části detailně vizualizují přepínání jednotlivých signálů během tohoto zkráceného cyklu.
+
+<img width="1424" height="258" alt="image" src="https://github.com/user-attachments/assets/106adb76-3a23-4b64-85cd-9326c012b8b4" />
+
 ## Bloková Schéma
 
 ![Screenshot](./imgs/schemaV1.5.png)
