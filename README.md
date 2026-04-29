@@ -2,11 +2,11 @@
 ### Platforma: Nexys A7-50T | Jazyk: VHDL | Nástroj: Vivado
 
 # Obsah:
-[Štruktúra projektu](https://github.com/qubbo1/DE1_Projekt_uloha2#%C5%A1trukt%C3%BAra-projektu-1)
-[🔧 Architecture Overview](https://github.com/qubbo1/DE1_Projekt_uloha2#-architecture-overview-1)
-[Popis priebehov](https://github.com/qubbo1/DE1_Projekt_uloha2#popis-priebehov-1)
-[Ovladanie](https://github.com/qubbo1/DE1_Projekt_uloha2#ovladanie-1)
-[Simulácie](https://github.com/qubbo1/DE1_Projekt_uloha2README.md#simul%C3%A1cie)
+1.[Štruktúra projektu](https://github.com/qubbo1/DE1_Projekt_uloha2#%C5%A1trukt%C3%BAra-projektu-1)
+2.[🔧 Architecture Overview](https://github.com/qubbo1/DE1_Projekt_uloha2#-architecture-overview-1)
+3.[Popis priebehov](https://github.com/qubbo1/DE1_Projekt_uloha2#popis-priebehov-1)
+4.[Ovladanie](https://github.com/qubbo1/DE1_Projekt_uloha2#ovladanie-1)
+5.[Simulácie](https://github.com/qubbo1/DE1_Projekt_uloha2README.md#simul%C3%A1cie)
 
 ---
 ## Štruktúra projektu
