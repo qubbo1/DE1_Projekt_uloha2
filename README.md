@@ -47,10 +47,10 @@ DE1_Projekt_uloha2/
 |---|---|---|---|---|
 | `clk` | in | std_logic | - | 100 MHz systémové hodiny |
 | `rst` | in | std_logic | - | Synchronní reset aktivní v úrovni High |
-| `btn_in` | in | std_logic | - | Surový vstup tlačítka (se zákmity) |
-| `btn_state` | out | std_logic | - | Stabilní úroveň (ošetřeno proti zákmitům) |
-| `btn_press` | out | std_logic | - | Jednocyklový pulz při stisknutí (náběžná hrana) |
-| `btn_release` | out | std_logic | - | Jednocyklový pulz při uvolnění (sestupná hrana) |
+| `btnin` | in | std_logic | - | Surový vstup tlačítka (se zákmity) |
+| `btnstate` | out | std_logic | - | Stabilní úroveň (ošetřeno proti zákmitům) |
+| `btnpress` | out | std_logic | - | Jednocyklový pulz při stisknutí (náběžná hrana) |
+| `btnrelease` | out | std_logic | - | Jednocyklový pulz při uvolnění (sestupná hrana) |
 
 ---
 
@@ -61,10 +61,10 @@ DE1_Projekt_uloha2/
 |---|---|---|---|---|
 | `clk` | in | std_logic | - | 100 MHz systémové hodiny |
 | `rst` | in | std_logic | - | Synchronní reset aktivní v úrovni High |
-| `btn_u` | in | std_logic | - | Pulz tlačítka Nahoru (ošetřený) |
-| `btn_d` | in | std_logic | - | Pulz tlačítka Dolů (ošetřený) |
-| `btn_l` | in | std_logic | - | Pulz tlačítka Vlevo (ošetřený) |
-| `btn_r` | in | std_logic | - | Pulz tlačítka Vpravo (ošetřený) |
+| `btnu` | in | std_logic | - | Pulz tlačítka Nahoru (ošetřený) |
+| `btnd` | in | std_logic | - | Pulz tlačítka Dolů (ošetřený) |
+| `btnl` | in | std_logic | - | Pulz tlačítka Vlevo (ošetřený) |
+| `btnr` | in | std_logic | - | Pulz tlačítka Vpravo (ošetřený) |
 | `sw_freq` | in | std_logic | - | SW[0] — režim úpravy frekvence |
 | `sw_wave` | in | std_logic | - | SW[1] — režim výběru průběhu |
 | `freq_val` | out | std_logic_vector | (13 downto 0) | Binární frekvence 0–9999 Hz |
