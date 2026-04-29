@@ -248,6 +248,8 @@ Simulace ukazuje funkci komponenty **řadiče 7segmentového displeje**. Modul z
 * Výstupy `seg[6:0]` (řízení sedmi segmentů) a `dp` (desetinná tečka) se nastavují na základě příslušné části vstupního 64bitového slova `disp_data`. 
 * Rozbalené struktury na dalších snímcích (např. u signálu `disp_data`) slouží pouze k detailnějšímu náhledu na jednotlivé bity uvnitř vektoru. V zobrazeném časovém okně nevykazuje výběr anody (`an`) změnu, což ukazuje ustálený stav pro zobrazení jedné konkrétní číslice.
 
+<img width="1421" height="155" alt="image" src="https://github.com/user-attachments/assets/51ad2811-052d-463b-81a5-a997dd883052" />
+
 ## Bloková Schéma
 
 ![Screenshot](./imgs/schemaV1.4.png)
