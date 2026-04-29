@@ -27,7 +27,7 @@ DE1_Projekt_uloha2/
 ##  Architecture Overview
 
 
-# Komponenty Generátoru Průběhů (VHDL)
+### Komponenty Generátoru Průběhů (VHDL)
 
 ### Komponenta: `clk_en`
 **Funkce:** Obecný generátor povolení hodin (clock-enable). Generuje jednocyklový pulz každých G_MAX hodinových cyklů. Výchozí G_MAX=1 000 000. Používá se pro ošetření zákmitů (debounce) s G_MAX=200 000 → vzorkování 2 ms při 100 MHz.
