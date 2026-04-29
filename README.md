@@ -252,6 +252,6 @@ Simulace ukazuje funkci komponenty **řadiče 7segmentového displeje**. Modul z
 
 ## Bloková Schéma
 
-![Screenshot](./imgs/schemaV1.4.png)
+![Screenshot](./imgs/schemaV1.5.png)
 
 
